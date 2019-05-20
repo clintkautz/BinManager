@@ -27,16 +27,13 @@ namespace BinManager.Views
                 switch (id)
                 {
                     case (int)MenuItemType.MainMenu:
-                        MenuPages.Add(id, new NavigationPage(new ItemsPage()));
+                        MenuPages.Add(id, new NavigationPage(new MainMenu()));
                         break;
                     case (int)MenuItemType.NewBin:
-                        MenuPages.Add(id, new NavigationPage(new AboutPage()));
+                        MenuPages.Add(id, new NavigationPage(new BinPage()));
                         break;
                     case(int)MenuItemType.Map:
                         MenuPages.Add(id, new NavigationPage(new MapPage()));
-                        break;
-                    case (int)MenuItemType.Items:
-                        MenuPages.Add(id, new NavigationPage(new ItemsPage()));
                         break;
                 }
             }

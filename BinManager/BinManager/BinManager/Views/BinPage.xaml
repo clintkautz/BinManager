@@ -19,8 +19,8 @@
                     </Frame>
 
                     <Label FontAttributes="Bold" Text="Employee #" x:Name="EmployeeLabel"/>
-                    <Entry x:Name="EmployeeNumTxtBox" />
-                    <!--TextChanged="EmployeeNumTxtBox_Changed"--> 
+                    <Entry x:Name="EmployeeNumTxtBox" TextChanged="EmployeeNumTxtBox_Changed"/>
+                    <!----> 
                     
                     <Label x:Name="IdentifierLbl" FontAttributes="Bold" Text="Identifier:"></Label>
                     <Entry x:Name="IdentifierEntry" Text="{Binding Identifier}" />
@@ -32,7 +32,7 @@
                     <Entry x:Name="ModifiedBy" Text="{Binding ModifiedBy}"/>
                     
                     <Label x:Name="BinTypeLabel" Text="Bin Type:" FontAttributes="Bold" Margin="0,5,0,0"/>
-                    <Picker x:Name= "BinType" SelectedIndex="{Binding BinType}" >
+                    <Picker x:Name= "BinType" SelectedIndex="{Binding BinType}" SelectedIndexChanged="BinType_Changed">
                         <Picker.ItemsSource>
                             <x:Array Type="{x:Type x:String}">
                                 <x:String>Flat Storage</x:String>
@@ -106,59 +106,72 @@
     
   <ContentPage Title="Capacity">
     <ContentPage.Content>
-        <ScrollView>
-                <!--<StackLayout Margin="10,35,10,10" x:Name="CapcaityStack">
-                
-                    <Label Text="" x:Name="TypeLable" HorizontalOptions="CenterAndExpand" />
-                    Flat Bin
-                    <Label Text="Crib Width:" x:Name="CribWidthLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                    <Entry Placeholder="Crib Width" Text="{Binding CribWidth}" Keyboard="Numeric" x:Name="CribWidth" />
+            <StackLayout>
+                <StackLayout Margin="10,35,10,10" x:Name="BinLabelStack">
+                        <Label Text="" x:Name="TypeLable" HorizontalOptions="CenterAndExpand" />
+                </StackLayout>
+                <ScrollView>
+                    <StackLayout Margin="10,35,10,10" x:Name="CapcaityStack">
+                        
+                        <StackLayout x:Name="FlatStack">
+                            <!--Flat Bin-->
+                            <Label Text="Crib Width:" x:Name="CribWidthLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                            <Entry Placeholder="Crib Width" Text="{Binding CribWidth}" Keyboard="Numeric" x:Name="CribWidth" />
 
-                    <Label Text="Crib Length:" x:Name="CribLengthLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                    <Entry Placeholder="Crib Length" Text="{Binding CribLength}" Keyboard="Numeric" x:Name="CribLength" />
+                            <Label Text="Crib Length:" x:Name="CribLengthLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                            <Entry Placeholder="Crib Length" Text="{Binding CribLength}" Keyboard="Numeric" x:Name="CribLength" />
+                        </StackLayout>
 
-                    Gravity Bin
-                    <Label Text="Rectangle Height:" x:Name="RectangleHeightLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                    <Entry Placeholder="Rectangle Height" Text="{Binding RectangleHeight}" Keyboard="Numeric" x:Name="RectangleHeight" />
+                        <StackLayout x:Name="GravityStack">
+                            <!--Gravity Bin-->
+                            <Label Text="Rectangle Height:" x:Name="RectangleHeightLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                            <Entry Placeholder="Rectangle Height" Text="{Binding RectangleHeight}" Keyboard="Numeric" x:Name="RectangleHeight" />
 
-                    <Label Text="Rectangle Width:" x:Name="RectangleWidthLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                    <Entry Placeholder="Rectangle Width" Text="{Binding RectangleWidth}" Keyboard="Numeric" x:Name="RectangleWidth" />
+                            <Label Text="Rectangle Width:" x:Name="RectangleWidthLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                            <Entry Placeholder="Rectangle Width" Text="{Binding RectangleWidth}" Keyboard="Numeric" x:Name="RectangleWidth" />
 
-                    <Label Text="Rectangle Length:" x:Name="RectangleLengthLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                    <Entry Placeholder="Rectangle Length" Text="{Binding RectangleLength}" Keyboard="Numeric" x:Name="RectangleLength" />
+                            <Label Text="Rectangle Length:" x:Name="RectangleLengthLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                            <Entry Placeholder="Rectangle Length" Text="{Binding RectangleLength}" Keyboard="Numeric" x:Name="RectangleLength" />
 
-                    <Label Text="Chute length:" x:Name="ChuteLengthLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                    <Entry Placeholder="Chute Length" Text="{Binding ChuteLength}" Keyboard="Numeric" x:Name="ChuteLength" />
+                            <Label Text="Chute length:" x:Name="ChuteLengthLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                            <Entry Placeholder="Chute Length" Text="{Binding ChuteLength}" Keyboard="Numeric" x:Name="ChuteLength" />
 
-                    <Label Text="Hopper Height:" x:Name="HopperHeightLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                    <Entry Placeholder="Hopper Height" Text="{Binding HopperHeight}" Keyboard="Numeric" x:Name="HopperHeight" />
+                            <Label Text="Hopper Height:" x:Name="HopperHeightLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                            <Entry Placeholder="Hopper Height" Text="{Binding HopperHeight}" Keyboard="Numeric" x:Name="HopperHeight" />
+                        </StackLayout>
 
-                    Polygon Bin
-                    <Label Text="Side Height:" x:Name="SideHeightLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                    <Entry Placeholder="Side Height" Text="{Binding SideHeight}" Keyboard="Numeric" x:Name="SideHeight" />
+                        <StackLayout x:Name="PolygonStack">
+                            <!--Polygon Bin-->
+                            <Label Text="Side Height:" x:Name="SideHeightLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                            <Entry Placeholder="Side Height" Text="{Binding SideHeight}" Keyboard="Numeric" x:Name="SideHeight" />
 
-                    <Label Text="Side Width:" x:Name="SideWidthLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                    <Entry Placeholder="Side Width" Text="{Binding SideWidth}" Keyboard="Numeric" x:Name="SideWidth" />
+                            <Label Text="Side Width:" x:Name="SideWidthLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                            <Entry Placeholder="Side Width" Text="{Binding SideWidth}" Keyboard="Numeric" x:Name="SideWidth" />
 
-                    <Label Text="Number of Sides:" x:Name="NumberOfSidesLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                    <Entry Placeholder="Number of Sides" Text="{Binding NumberOfSides}" Keyboard="Numeric" x:Name="NumberOfSides" />
+                            <Label Text="Number of Sides:" x:Name="NumberOfSidesLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                            <Entry Placeholder="Number of Sides" Text="{Binding NumberOfSides}" Keyboard="Numeric" x:Name="NumberOfSides" />
+                        </StackLayout>
 
-                    Round Bin
-                    <Label Text="Radius:" x:Name="RadiusLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                    <Entry Placeholder="Radius" Text="{Binding Radius}" Keyboard="Numeric" x:Name="Radius"/>
+                        <StackLayout x:Name="RoundStack">
+                            <!--Round Bin-->
+                            <Label Text="Radius:" x:Name="RadiusLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                            <Entry Placeholder="Radius" Text="{Binding Radius}" Keyboard="Numeric" x:Name="Radius"/>
 
-                    <Label Text="Wall Height:" x:Name="WallHeightLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                    <Entry Placeholder="Wall Height" Text="{Binding WallHeight}" Keyboard="Numeric" x:Name="WallHeight" />
+                            <Label Text="Wall Height:" x:Name="WallHeightLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                            <Entry Placeholder="Wall Height" Text="{Binding WallHeight}" Keyboard="Numeric" x:Name="WallHeight" />
 
-                    <Label Text="Roof Height:" x:Name="RoofHeightLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                    <Entry Placeholder="Roof Height" Text="{Binding RoofHeight}" Keyboard="Numeric" x:Name="RoofHeight"/>
+                            <Label Text="Roof Height:" x:Name="RoofHeightLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                            <Entry Placeholder="Roof Height" Text="{Binding RoofHeight}" Keyboard="Numeric" x:Name="RoofHeight"/>
 
-                    <Label Text="Hopper Height:" x:Name="RoundHopperHeightLabel" FontAttributes="Bold" Margin="0,5,0,0" />
-                    <Entry Placeholder="Hopper Height" Text="{Binding RoundHopperHeight}" Keyboard="Numeric" x:Name="RoundHopperHeight" />
-                
-            </StackLayout>-->
-        </ScrollView>
-    </ContentPage.Content>
+                            <Label Text="Hopper Height:" x:Name="RoundHopperHeightLabel" FontAttributes="Bold" Margin="0,5,0,0" />
+                            <Entry Placeholder="Hopper Height" Text="{Binding RoundHopperHeight}" Keyboard="Numeric" x:Name="RoundHopperHeight" />
+                        </StackLayout>
+                        
+
+                    </StackLayout>
+                </ScrollView>
+            </StackLayout>
+        </ContentPage.Content>
   </ContentPage>
     
   <ContentPage Title="Contents">

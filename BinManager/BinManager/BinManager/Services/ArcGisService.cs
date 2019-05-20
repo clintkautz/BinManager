@@ -170,43 +170,53 @@ namespace BinManager
                 attributes.Add("bin_volume", dr);
 
                 //bin type specific logic below
+                Type t = bin.GetType();
                 if (bin.BinType == BinTypeEnum.FlatStructure)
                 {
-                    FlatBin flat = new FlatBin(bin);
-
-                    attributes.Add("crib_height", flat.CribLength);
-                    attributes.Add("crib_width", flat.CribWidth);
+                    if (t.Equals(typeof(FlatBin)))
+                    {
+                        FlatBin flat = (FlatBin)bin;
+                        attributes.Add("crib_height", flat.CribLength);
+                        attributes.Add("crib_width", flat.CribWidth);
+                    }                    
                 }
                 else if (bin.BinType == BinTypeEnum.GravityWagon)
                 {
-                    GravityBin gravityBin = new GravityBin(bin);
-
-                    attributes.Add("chute_length", gravityBin.ChuteLength);
-                    attributes.Add("hopper_height", gravityBin.HopperHeight);
-                    attributes.Add("rectangle_height", gravityBin.RectangleHeight);
-                    attributes.Add("rectangle_length", gravityBin.RectangleLength);
-                    attributes.Add("rectangle_width", gravityBin.RectangleWidth);
+                    if (t.Equals(typeof(GravityBin)))
+                    {
+                        GravityBin gravityBin = (GravityBin)bin;
+                        attributes.Add("chute_length", gravityBin.ChuteLength);
+                        attributes.Add("hopper_height", gravityBin.HopperHeight);
+                        attributes.Add("rectangle_height", gravityBin.RectangleHeight);
+                        attributes.Add("rectangle_length", gravityBin.RectangleLength);
+                        attributes.Add("rectangle_width", gravityBin.RectangleWidth);
+                    }                    
                 }
                 else if (bin.BinType == BinTypeEnum.PolygonStructure)
                 {
-                    PolygonBin polygonBin = new PolygonBin(bin);
-                  
-                    attributes.Add("side_height", polygonBin.SideHeight);
-                    attributes.Add("side_width", polygonBin.SideWidth);
-                    attributes.Add("number_of_sides", polygonBin.NumberOfSides);
+                    if (t.Equals(typeof(PolygonBin)))
+                    {
+                        PolygonBin polygonBin = (PolygonBin)bin;
+                        attributes.Add("side_height", polygonBin.SideHeight);
+                        attributes.Add("side_width", polygonBin.SideWidth);
+                        attributes.Add("number_of_sides", polygonBin.NumberOfSides);
+                    }
+                    
                 }
                 else if (bin.BinType == BinTypeEnum.RoundStorage)
-                {
-                    RoundBin round = new RoundBin(bin);
-
-                    if(round.HasHopper.HasValue)
+                {                  
+                    if (t.Equals(typeof(RoundBin)))
                     {
-                        attributes.Add("has_hopper", round.HasHopper.Value ? "true" : "false");
-                    }
-                    attributes.Add("radius", round.Radius);
-                    attributes.Add("wall_height", round.WallHeight);
-                    attributes.Add("roof_height", round.RoofHeight);
-                    attributes.Add("hopper_height", round.HopperHeight);
+                        RoundBin round = (RoundBin) bin;
+                        if (round.HasHopper.HasValue)
+                        {
+                            attributes.Add("has_hopper", round.HasHopper.Value ? "true" : "false");
+                        }
+                        attributes.Add("radius", round.Radius);
+                        attributes.Add("wall_height", round.WallHeight);
+                        attributes.Add("roof_height", round.RoofHeight);
+                        attributes.Add("hopper_height", round.HopperHeight);
+                    }                    
                 }
                 
                 MapPoint mp;

@@ -54,8 +54,8 @@ namespace BinManager.Views
             CreatedBy.IsVisible = false;
             CreatedBy.IsEnabled = false;
 
-            //HasHopperHopperDisable();
-            //HideCapacityFields();
+            HasHopperHopperDisable();
+            HideCapacityFields();
             //HideContentsFields();
 
         }
@@ -75,8 +75,8 @@ namespace BinManager.Views
             //SetImage();
             ////CalcVolume();
             ////disable fields
-            //GeneralStack.IsEnabled = false;
-            //CapcaityStack.IsEnabled = false;
+            GeneralStack.IsEnabled = false;
+            CapcaityStack.IsEnabled = false;
             //ContentStack.IsEnabled = false;
         }
 
@@ -124,28 +124,27 @@ namespace BinManager.Views
 
         private async Task SaveAsync()
         {
-            //ArcCrudEnum addResult = await ArcGisService.AddBin(viewModel);
-            ////bool goToMap = false;
+            ArcCrudEnum addResult = await ArcGisService.AddBin(viewModel);
 
-            //switch (addResult)
-            //{
-            //    case ArcCrudEnum.Success:
-            //        //activityIndicator_process.Off();
-            //        await DisplayAlert("Success!", "New bin successfully added", "Ok");
-            //        viewModel.New = false;
-            //        viewModel.Edit = false;
-            //        Save.Text = "Edit";
-            //        //disable fields
-            //        break;
-            //    case ArcCrudEnum.Failure:
-            //        //activityIndicator_process.Off();
-            //        await DisplayAlert("Error", "Error occurred, try again", "Ok");
-            //        break;
-            //    case ArcCrudEnum.Exception:
-            //        //activityIndicator_process.Off();
-            //        await DisplayAlert("Error", "Failed to connect to online services. Please try again", "Ok");
-            //        break;
-            //}
+            switch (addResult)
+            {
+                case ArcCrudEnum.Success:
+                    //activityIndicator_process.Off();
+                    await DisplayAlert("Success!", "New bin successfully added", "Ok");
+                    viewModel.New = false;
+                    viewModel.Edit = false;
+                    Save.Text = "Edit";
+                    SetCapcityPage();
+                    break;
+                case ArcCrudEnum.Failure:
+                    //activityIndicator_process.Off();
+                    await DisplayAlert("Error", "Error occurred, try again", "Ok");
+                    break;
+                case ArcCrudEnum.Exception:
+                    //activityIndicator_process.Off();
+                    await DisplayAlert("Error", "Failed to connect to online services. Please try again", "Ok");
+                    break;
+            }
         }
 
         private async Task<bool> LocationEnabledAsync()
@@ -177,40 +176,40 @@ namespace BinManager.Views
                 EmployeeLabel.TextColor = Color.Black;
 
                 //gravity bin required capacity fields
-                //ChuteLengthLabel.Text = DefaultLabels[3];
-                //ChuteLengthLabel.TextColor = Color.Black;
-                //HopperHeightLabel.Text = DefaultLabels[4];
-                //HopperHeightLabel.TextColor = Color.Black;
-                //RectangleHeightLabel.Text = DefaultLabels[5];
-                //RectangleHeightLabel.TextColor = Color.Black;
-                //RectangleLengthLabel.Text = DefaultLabels[6];
-                //RectangleLengthLabel.TextColor = Color.Black;
-                //RectangleWidthLabel.Text = DefaultLabels[7];
-                //RectangleWidthLabel.TextColor = Color.Black;
+                ChuteLengthLabel.Text = DefaultLabels[3];
+                ChuteLengthLabel.TextColor = Color.Black;
+                HopperHeightLabel.Text = DefaultLabels[4];
+                HopperHeightLabel.TextColor = Color.Black;
+                RectangleHeightLabel.Text = DefaultLabels[5];
+                RectangleHeightLabel.TextColor = Color.Black;
+                RectangleLengthLabel.Text = DefaultLabels[6];
+                RectangleLengthLabel.TextColor = Color.Black;
+                RectangleWidthLabel.Text = DefaultLabels[7];
+                RectangleWidthLabel.TextColor = Color.Black;
 
-                ////polygon bin required capacity fields
-                //SideHeightLabel.Text = DefaultLabels[8];
-                //SideHeightLabel.TextColor = Color.Black;
-                //SideWidthLabel.Text = DefaultLabels[9];
-                //SideWidthLabel.TextColor = Color.Black;
-                //NumberOfSidesLabel.Text = DefaultLabels[10];
-                //NumberOfSidesLabel.TextColor = Color.Black;
+                //polygon bin required capacity fields
+                SideHeightLabel.Text = DefaultLabels[8];
+                SideHeightLabel.TextColor = Color.Black;
+                SideWidthLabel.Text = DefaultLabels[9];
+                SideWidthLabel.TextColor = Color.Black;
+                NumberOfSidesLabel.Text = DefaultLabels[10];
+                NumberOfSidesLabel.TextColor = Color.Black;
 
-                ////round bin required capacity fields
-                //RadiusLabel.Text = DefaultLabels[11];
-                //RadiusLabel.TextColor = Color.Black;
-                //RoofHeightLabel.Text = DefaultLabels[12];
-                //RoofHeightLabel.TextColor = Color.Black;
-                //WallHeightLabel.Text = DefaultLabels[13];
-                //WallHeightLabel.TextColor = Color.Black;
-                //RoundHopperHeightLabel.Text = DefaultLabels[14];
-                //RoundHopperHeightLabel.TextColor = Color.Black;
+                //round bin required capacity fields
+                RadiusLabel.Text = DefaultLabels[11];
+                RadiusLabel.TextColor = Color.Black;
+                RoofHeightLabel.Text = DefaultLabels[12];
+                RoofHeightLabel.TextColor = Color.Black;
+                WallHeightLabel.Text = DefaultLabels[13];
+                WallHeightLabel.TextColor = Color.Black;
+                RoundHopperHeightLabel.Text = DefaultLabels[14];
+                RoundHopperHeightLabel.TextColor = Color.Black;
 
-                ////flat bin required capacity fields
-                //CribLengthLabel.Text = DefaultLabels[15];
-                //CribLengthLabel.TextColor = Color.Black;
-                //CribWidthLabel.Text = DefaultLabels[16];
-                //CribWidthLabel.TextColor = Color.Black;
+                //flat bin required capacity fields
+                CribLengthLabel.Text = DefaultLabels[15];
+                CribLengthLabel.TextColor = Color.Black;
+                CribWidthLabel.Text = DefaultLabels[16];
+                CribWidthLabel.TextColor = Color.Black;
 
                 //contents required fields
                 //CropLabel.Text = DefaultLabels[17];
@@ -288,92 +287,92 @@ namespace BinManager.Views
                         EmployeeLabel.Text = viewModel.Errors[2];
                         EmployeeLabel.TextColor = Color.Red;
                         break;
-                    
-                    //gravity bin required capacity fields
-                    //case 3:
-                    //    ChuteLengthLabel.Text = viewModel.Errors[3];
-                    //    ChuteLengthLabel.TextColor = Color.Red;
-                    //    break;
-                    //case 4:
-                    //    HopperHeightLabel.Text = viewModel.Errors[4];
-                    //    HopperHeightLabel.TextColor = Color.Red;
-                    //    break;
-                    //case 5:
-                    //    RectangleHeightLabel.Text = viewModel.Errors[5];
-                    //    RectangleHeightLabel.TextColor = Color.Red;
-                    //    break;
-                    //case 6:
-                    //    RectangleLengthLabel.Text = viewModel.Errors[6];
-                    //    RectangleLengthLabel.TextColor = Color.Red;
-                    //    break;
-                    //case 7:
-                    //    RectangleWidthLabel.Text = viewModel.Errors[7];
-                    //    RectangleWidthLabel.TextColor = Color.Red;
-                    //    break;
-                    
-                    ////polygon bin required capacity fields
-                    //case 8:
-                    //    SideHeightLabel.Text = viewModel.Errors[8];
-                    //    SideHeightLabel.TextColor = Color.Red;
-                    //    break;
-                    //case 9:
-                    //    SideWidthLabel.Text = viewModel.Errors[9];
-                    //    SideWidthLabel.TextColor = Color.Red;
-                    //    break;
-                    //case 10:
-                    //    NumberOfSidesLabel.Text = viewModel.Errors[10];
-                    //    NumberOfSidesLabel.TextColor = Color.Red;
-                    //    break;
-                    
-                    ////round bin required capacity fields
-                    //case 11:
-                    //    RadiusLabel.Text = viewModel.Errors[11];
-                    //    RadiusLabel.TextColor = Color.Red;
-                    //    break;
-                    //case 12:
-                    //    RoofHeightLabel.Text = viewModel.Errors[12];
-                    //    RoofHeightLabel.TextColor = Color.Red;
-                    //    break;
-                    //case 13:
-                    //    WallHeightLabel.Text = viewModel.Errors[13];
-                    //    WallHeightLabel.TextColor = Color.Red;
-                    //    break;
-                    //case 14:
-                    //    RoundHopperHeightLabel.Text = viewModel.Errors[14];
-                    //    RoundHopperHeightLabel.TextColor = Color.Red;
-                    //    break;
-                    
-                    ////flat bin required capacity fields
-                    //case 15:
-                    //    CribLengthLabel.Text = viewModel.Errors[15];
-                    //    CribLengthLabel.TextColor = Color.Red;
-                    //    break;
-                    //case 16:
-                    //    CribWidthLabel.Text = viewModel.Errors[16];
-                    //    CribWidthLabel.TextColor = Color.Red;
-                    //    break;
 
-                    //contents required fields
-                    //case 17:
-                    //    CropLabel.Text = viewModel.Errors[17];
-                    //    CropLabel.TextColor = Color.Red;
-                    //    break;
-                    //case 18:
-                    //    CropYearLabel.Text = viewModel.Errors[18];
-                    //    CropYearLabel.TextColor = Color.Red;
-                    //    break;
-                    //case 19:
-                    //    GrainHeightLabel.Text = viewModel.Errors[19];
-                    //    GrainHeightLabel.TextColor = Color.Red;
-                    //    break;
-                    //case 20:
-                    //    GrainConeHeightLabel.Text = viewModel.Errors[20];
-                    //    GrainConeHeightLabel.TextColor = Color.Red;
-                    //    break;
-                    //case 21:
-                    //    GrainHopperHeightLabel.Text = viewModel.Errors[21];
-                    //    GrainHopperHeightLabel.TextColor = Color.Red;
-                    //    break;
+                    //gravity bin required capacity fields
+                    case 3:
+                        ChuteLengthLabel.Text = viewModel.Errors[3];
+                        ChuteLengthLabel.TextColor = Color.Red;
+                        break;
+                    case 4:
+                        HopperHeightLabel.Text = viewModel.Errors[4];
+                        HopperHeightLabel.TextColor = Color.Red;
+                        break;
+                    case 5:
+                        RectangleHeightLabel.Text = viewModel.Errors[5];
+                        RectangleHeightLabel.TextColor = Color.Red;
+                        break;
+                    case 6:
+                        RectangleLengthLabel.Text = viewModel.Errors[6];
+                        RectangleLengthLabel.TextColor = Color.Red;
+                        break;
+                    case 7:
+                        RectangleWidthLabel.Text = viewModel.Errors[7];
+                        RectangleWidthLabel.TextColor = Color.Red;
+                        break;
+
+                    //polygon bin required capacity fields
+                    case 8:
+                        SideHeightLabel.Text = viewModel.Errors[8];
+                        SideHeightLabel.TextColor = Color.Red;
+                        break;
+                    case 9:
+                        SideWidthLabel.Text = viewModel.Errors[9];
+                        SideWidthLabel.TextColor = Color.Red;
+                        break;
+                    case 10:
+                        NumberOfSidesLabel.Text = viewModel.Errors[10];
+                        NumberOfSidesLabel.TextColor = Color.Red;
+                        break;
+
+                    //round bin required capacity fields
+                    case 11:
+                        RadiusLabel.Text = viewModel.Errors[11];
+                        RadiusLabel.TextColor = Color.Red;
+                        break;
+                    case 12:
+                        RoofHeightLabel.Text = viewModel.Errors[12];
+                        RoofHeightLabel.TextColor = Color.Red;
+                        break;
+                    case 13:
+                        WallHeightLabel.Text = viewModel.Errors[13];
+                        WallHeightLabel.TextColor = Color.Red;
+                        break;
+                    case 14:
+                        RoundHopperHeightLabel.Text = viewModel.Errors[14];
+                        RoundHopperHeightLabel.TextColor = Color.Red;
+                        break;
+
+                    //flat bin required capacity fields
+                    case 15:
+                        CribLengthLabel.Text = viewModel.Errors[15];
+                        CribLengthLabel.TextColor = Color.Red;
+                        break;
+                    case 16:
+                        CribWidthLabel.Text = viewModel.Errors[16];
+                        CribWidthLabel.TextColor = Color.Red;
+                        break;
+
+                        //contents required fields
+                        //case 17:
+                        //    CropLabel.Text = viewModel.Errors[17];
+                        //    CropLabel.TextColor = Color.Red;
+                        //    break;
+                        //case 18:
+                        //    CropYearLabel.Text = viewModel.Errors[18];
+                        //    CropYearLabel.TextColor = Color.Red;
+                        //    break;
+                        //case 19:
+                        //    GrainHeightLabel.Text = viewModel.Errors[19];
+                        //    GrainHeightLabel.TextColor = Color.Red;
+                        //    break;
+                        //case 20:
+                        //    GrainConeHeightLabel.Text = viewModel.Errors[20];
+                        //    GrainConeHeightLabel.TextColor = Color.Red;
+                        //    break;
+                        //case 21:
+                        //    GrainHopperHeightLabel.Text = viewModel.Errors[21];
+                        //    GrainHopperHeightLabel.TextColor = Color.Red;
+                        //    break;
                 }
             }
         }
@@ -468,254 +467,174 @@ namespace BinManager.Views
         #endregion
 
         #region SetCapcity Page
-        //private void SetCapcityPage()
-        //{
-        //    switch (viewModel.BinType)
-        //    {
-        //        case -1:
-        //            HideCapacityFields();
-        //            break;
-        //        case 0:
-        //            SetFlatCapacity();
-        //            break;
-        //        case 1:
-        //            SetGravityCapacity();
-                    
-        //            break;
-        //        case 2:
-        //            SetPolygonCapacity();
-        //            break;
-        //        case 3:
-        //            SetRoundCapacity();
-        //            break;
-        //    }
-        //}
+        private void SetCapcityPage()
+        {
+            switch (viewModel.BinType)
+            {
+                case -1:
+                    HideCapacityFields();
+                    break;
+                case 0:
+                    SetFlatCapacity();
+                    break;
+                case 1:
+                    SetGravityCapacity();
 
-        //private void SetPolygonCapacity()
-        //{
-        //    HideCapacityFields();
+                    break;
+                case 2:
+                    SetPolygonCapacity();
+                    break;
+                case 3:
+                    SetRoundCapacity();
+                    break;
+            }
+        }
 
-        //    TypeLable.Text = "Polygon Bin Type Capacity";
-        //    TypeLable.TextColor = Color.Black;
+        private void SetPolygonCapacity()
+        {
+            CapcaityStack.IsEnabled = true;
+            CapcaityStack.IsVisible = true;
 
-        //    //polygon bin fields
-        //    SideHeightLabel.IsEnabled = true;
-        //    SideHeightLabel.IsVisible = true;
-        //    SideHeight.IsEnabled = true;
-        //    SideHeight.IsVisible = true;
-        //    SideWidthLabel.IsEnabled = true;
-        //    SideWidthLabel.IsVisible = true;
-        //    SideWidth.IsEnabled = true;
-        //    SideWidth.IsVisible = true;
-        //    NumberOfSidesLabel.IsEnabled = true;
-        //    NumberOfSidesLabel.IsVisible = true;
-        //    NumberOfSides.IsEnabled = true;
-        //    NumberOfSides.IsVisible = true;
-        //}
+            TypeLable.Text = "Polygon Bin Type Capacity";
+            TypeLable.TextColor = Color.Black;
 
-        //private void SetGravityCapacity()
-        //{
-        //    HideCapacityFields();
+            PolygonStack.IsVisible = true;
+            if (viewModel.New || viewModel.Edit)
+            {
+                PolygonStack.IsEnabled = true;
+            }
 
-        //    TypeLable.Text = "Gravity Bin Type Capacity";
-        //    TypeLable.TextColor = Color.Black;
+            FlatStack.IsEnabled = false;
+            FlatStack.IsVisible = false;
+            GravityStack.IsEnabled = false;
+            GravityStack.IsVisible = false;
+            RoundStack.IsEnabled = false;
+            RoundStack.IsVisible = false;
+        }
 
-        //    //garvity bin fields
-        //    RectangleHeightLabel.IsEnabled = true;
-        //    RectangleHeightLabel.IsVisible = true;
-        //    RectangleHeight.IsEnabled = true;
-        //    RectangleHeight.IsVisible = true;
-        //    RectangleWidthLabel.IsEnabled = true;
-        //    RectangleWidthLabel.IsVisible = true;
-        //    RectangleWidth.IsEnabled = true;
-        //    RectangleWidth.IsVisible = true;
-        //    RectangleLengthLabel.IsEnabled = true;
-        //    RectangleLengthLabel.IsVisible = true;
-        //    RectangleLength.IsEnabled = true;
-        //    RectangleLength.IsVisible = true;
-        //    ChuteLengthLabel.IsEnabled = true;
-        //    ChuteLengthLabel.IsVisible = true;
-        //    ChuteLength.IsEnabled = true;
-        //    ChuteLength.IsVisible = true;
-        //    HopperHeightLabel.IsEnabled = true;
-        //    HopperHeightLabel.IsVisible = true;
-        //    HopperHeight.IsEnabled = true;
-        //    HopperHeight.IsVisible = true;
-        //}
+        private void SetGravityCapacity()
+        {
+            CapcaityStack.IsEnabled = true;
+            CapcaityStack.IsVisible = true;
 
-        //private void SetRoundCapacity()
-        //{
-        //    HideCapacityFields();
+            TypeLable.Text = "Gravity Bin Type Capacity";
+            TypeLable.TextColor = Color.Black;
 
-        //    TypeLable.Text = "Round Bin Type Capacity";
-        //    TypeLable.TextColor = Color.Black;
+            GravityStack.IsVisible = true;
+            if (viewModel.New || viewModel.Edit)
+            {
+                GravityStack.IsEnabled = true;
+            }
 
-        //    //round bin fields
-        //    RadiusLabel.IsEnabled = true;
-        //    RadiusLabel.IsVisible = true;
-        //    Radius.IsEnabled = true;
-        //    Radius.IsVisible = true;
-        //    WallHeightLabel.IsEnabled = true;
-        //    WallHeightLabel.IsVisible = true;
-        //    WallHeight.IsEnabled = true;
-        //    WallHeight.IsVisible = true;
-        //    RoofHeightLabel.IsEnabled = true;
-        //    RoofHeightLabel.IsVisible = true;
-        //    RoofHeight.IsEnabled = true;
-        //    RoofHeight.IsVisible = true;
-        //    RoundHopperHeightLabel.IsEnabled = true;
-        //    RoundHopperHeightLabel.IsVisible = true;
-        //    RoundHopperHeight.IsEnabled = true;
-        //    RoundHopperHeight.IsVisible = true;
-        //}
+            FlatStack.IsEnabled = false;
+            FlatStack.IsVisible = false;
+            PolygonStack.IsEnabled = false;
+            PolygonStack.IsVisible = false;
+            RoundStack.IsEnabled = false;
+            RoundStack.IsVisible = false;
+        }
 
-        //private void SetFlatCapacity()
-        //{
-        //    HideCapacityFields();
+        private void SetRoundCapacity()
+        {
+            CapcaityStack.IsEnabled = true;
+            CapcaityStack.IsVisible = true;
 
-        //    TypeLable.Text = "Falt Bin Type Capacity";
-        //    TypeLable.TextColor = Color.Black;
+            TypeLable.Text = "Round Bin Type Capacity";
+            TypeLable.TextColor = Color.Black;
 
-        //    //flat bin fields
-        //    CribWidthLabel.IsEnabled = true;
-        //    CribWidthLabel.IsVisible = true;
-        //    CribWidth.IsEnabled = true;
-        //    CribWidth.IsVisible = true;
-        //    CribLengthLabel.IsEnabled = true;
-        //    CribLengthLabel.IsVisible = true;
-        //    CribLength.IsEnabled = true;
-        //    CribLength.IsVisible = true;
-        //}
+            RoundStack.IsVisible = true;
+            if(viewModel.New || viewModel.Edit)
+            {
+                RoundStack.IsEnabled = true;
+            }
 
-        //private void HideCapacityFields()
-        //{
-        //    TypeLable.Text = "Bin Type is required";
-        //    TypeLable.TextColor = Color.Red;
+            FlatStack.IsEnabled = false;
+            FlatStack.IsVisible = false;
+            GravityStack.IsEnabled = false;
+            GravityStack.IsVisible = false;
+            PolygonStack.IsEnabled = false;
+            PolygonStack.IsVisible = false;            
+        }
 
-        //    //flat bin fields
-        //    CribWidthLabel.IsEnabled = false;
-        //    CribWidthLabel.IsVisible = false;
-        //    CribWidth.IsEnabled = false;
-        //    CribWidth.IsVisible = false;
-        //    CribLengthLabel.IsEnabled = false;
-        //    CribLengthLabel.IsVisible = false;
-        //    CribLength.IsEnabled = false;
-        //    CribLength.IsVisible = false;
+        private void SetFlatCapacity()
+        {
+            CapcaityStack.IsEnabled = true;
+            CapcaityStack.IsVisible = true;
 
-        //    //garvity bin fields
-        //    RectangleHeightLabel.IsEnabled = false;
-        //    RectangleHeightLabel.IsVisible = false;
-        //    RectangleHeight.IsEnabled = false;
-        //    RectangleHeight.IsVisible = false;
-        //    RectangleWidthLabel.IsEnabled = false;
-        //    RectangleWidthLabel.IsVisible = false;
-        //    RectangleWidth.IsEnabled = false;
-        //    RectangleWidth.IsVisible = false;
-        //    RectangleLengthLabel.IsEnabled = false;
-        //    RectangleLengthLabel.IsVisible = false;
-        //    RectangleLength.IsEnabled = false;
-        //    RectangleLength.IsVisible = false;
-        //    ChuteLengthLabel.IsEnabled = false;
-        //    ChuteLengthLabel.IsVisible = false;
-        //    ChuteLength.IsEnabled = false;
-        //    ChuteLength.IsVisible = false;
-        //    HopperHeightLabel.IsEnabled = false;
-        //    HopperHeightLabel.IsVisible = false;
-        //    HopperHeight.IsEnabled = false;
-        //    HopperHeight.IsVisible = false;
+            TypeLable.Text = "Falt Bin Type Capacity";
+            TypeLable.TextColor = Color.Black;
 
-        //    //polygon bin fields
-        //    SideHeightLabel.IsEnabled = false;
-        //    SideHeightLabel.IsVisible = false;
-        //    SideHeight.IsEnabled = false;
-        //    SideHeight.IsVisible = false;
-        //    SideWidthLabel.IsEnabled = false;
-        //    SideWidthLabel.IsVisible = false;
-        //    SideWidth.IsEnabled = false;
-        //    SideWidth.IsVisible = false;
-        //    NumberOfSidesLabel.IsEnabled = false;
-        //    NumberOfSidesLabel.IsVisible = false;
-        //    NumberOfSides.IsEnabled = false;
-        //    NumberOfSides.IsVisible = false;
+            FlatStack.IsVisible = true;
+            if (viewModel.New || viewModel.Edit)
+            {
+                FlatStack.IsEnabled = true;
+            }
 
-        //    //round bin fields
-        //    RadiusLabel.IsEnabled = false;
-        //    RadiusLabel.IsVisible = false;
-        //    Radius.IsEnabled = false;
-        //    Radius.IsVisible = false;
-        //    WallHeightLabel.IsEnabled = false;
-        //    WallHeightLabel.IsVisible = false;
-        //    WallHeight.IsEnabled = false;
-        //    WallHeight.IsVisible = false;
-        //    RoofHeightLabel.IsEnabled = false;
-        //    RoofHeightLabel.IsVisible = false;
-        //    RoofHeight.IsEnabled = false;
-        //    RoofHeight.IsVisible = false;
-        //    RoundHopperHeightLabel.IsEnabled = false;
-        //    RoundHopperHeightLabel.IsVisible = false;
-        //    RoundHopperHeight.IsEnabled = false;
-        //    RoundHopperHeight.IsVisible = false;
-        //}
+            GravityStack.IsEnabled = false;
+            GravityStack.IsVisible = false;
+            PolygonStack.IsEnabled = false;
+            PolygonStack.IsVisible = false;
+            RoundStack.IsEnabled = false;
+            RoundStack.IsVisible = false;
+        }
+
+        private void HideCapacityFields()
+        {
+            TypeLable.Text = "Bin Type is required";
+            TypeLable.TextColor = Color.Red;
+            CapcaityStack.IsEnabled = false;
+            CapcaityStack.IsVisible = false;
+        }
         #endregion
 
         #region General Field Events
 
-        //private void EmployeeNumTxtBox_Changed(object sender, TextChangedEventArgs e)
-        //{
-        //    //new entry
-        //    if (viewModel.New)
-        //    {
-        //        viewModel.Binstance.CreatedBy = EmployeeNumTxtBox.Text;
-        //    }
+        private void EmployeeNumTxtBox_Changed(object sender, TextChangedEventArgs e)
+        {
+            viewModel.EmpoyeeNumber = EmployeeNumTxtBox.Text;
+        }
 
-        //    //edit entry
-        //    if (viewModel.Edit)
-        //    {
-        //        viewModel.Binstance.ModifiedBy = EmployeeNumTxtBox.Text;
-        //    }
-        //}
+        private void BinType_Changed(object sender, EventArgs e)
+        {
+            switch (BinType.SelectedIndex)
+            {
+                case 0:
+                    HasHopperHopperDisable();
+                    break;
+                case 1:
+                    HasHopperHopperDisable();
+                    break;
+                case 2:
+                    HasHopperHopperDisable();
+                    break;
+                case 3:
+                    HasHopperHopperEnable();
+                    break;
+                case -1:
+                default:
+                    break;
+            }
 
-        //private void BinType_Changed(object sender, EventArgs e)
-        //{
-        //    //switch (BinType.SelectedIndex)
-        //    //{
-        //    //    case 0:
-        //    //        HasHopperHopperDisable();
-        //    //        break;
-        //    //    case 1:
-        //    //        HasHopperHopperDisable();
-        //    //        break;
-        //    //    case 2:
-        //    //        HasHopperHopperDisable();
-        //    //        break;
-        //    //    case 3:
-        //    //        HasHopperHopperEnable();
-        //    //        break;
-        //    //    case -1:
-        //    //    default:
-        //    //        break;
-        //    //}
+            SetCapcityPage();
+            //SetContentsPage();
 
-        //    //SetCapcityPage();
-        //    //SetContentsPage();
+        }
 
-        //}
+        private void HasHopperHopperEnable()
+        {
+            HasHopperLabel.IsEnabled = true;
+            HasHopperLabel.IsVisible = true;
+            HasHopper.IsEnabled = true;
+            HasHopper.IsVisible = true;
+        }
 
-        //private void HasHopperHopperEnable()
-        //{
-        //    HasHopperLabel.IsEnabled = true;
-        //    HasHopperLabel.IsVisible = true;
-        //    HasHopper.IsEnabled = true;
-        //    HasHopper.IsVisible = true;
-        //}
-
-        //private void HasHopperHopperDisable()
-        //{
-        //    HasHopperLabel.IsEnabled = false;
-        //    HasHopperLabel.IsVisible = false;
-        //    HasHopper.IsEnabled = false;
-        //    HasHopper.IsVisible = false;
-        //}
+        private void HasHopperHopperDisable()
+        {
+            HasHopperLabel.IsEnabled = false;
+            HasHopperLabel.IsVisible = false;
+            HasHopper.IsEnabled = false;
+            HasHopper.IsVisible = false;
+        }
 
         #endregion
 

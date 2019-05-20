@@ -11,7 +11,7 @@ namespace BinManager.ViewModels
     {
         public MainMenuViewModel()
         {
-            Title = "Bin Manager Main Menu";
+            Title = "Bin Manager";
         }
 
     }

@@ -11,10 +11,22 @@ namespace BinManager.Utilities.Mappers
         public static IBinstance MapToBin(this BinViewModel inViewModel)
         {
             IBinstance bin = new Binstance();
+            if (inViewModel.New)
+            {
+                bin.CreatedBy = inViewModel.EmpoyeeNumber;
+            }
+            else if (inViewModel.Edit)
+            {
+                bin.ModifiedBy = inViewModel.EmpoyeeNumber;
+            }
+            else
+            {
+                bin.CreatedBy = inViewModel.CreatedBy;
+                bin.ModifiedBy = inViewModel.ModifiedBy;
+            }
 
-            bin.CreatedBy = inViewModel.CreatedBy;
             bin.Identifier = inViewModel.Identifier;
-            bin.ModifiedBy = inViewModel.ModifiedBy;
+            
             bin.YearCollected = inViewModel.YearCollected;
             switch (inViewModel.Owned)
             {
@@ -91,187 +103,187 @@ namespace BinManager.Utilities.Mappers
             return bin;
         }
 
-        //public static FlatBin MapBinToFlatType(this BinViewModel inViewModel, IBinstance bin)
-        //{
-        //    FlatBin fbin = new FlatBin(bin);
-        //    double d;
-        //    try
-        //    {
-        //        fbin.CribLength = double.TryParse(inViewModel.CribLength, out d) ? d : 0.0;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        fbin.CribLength = 0;
-        //    }
+        public static FlatBin MapBinToFlatType(this BinViewModel inViewModel, IBinstance bin)
+        {
+            FlatBin fbin = new FlatBin(bin);
+            double d;
+            try
+            {
+                fbin.CribLength = double.TryParse(inViewModel.CribLength, out d) ? d : 0.0;
+            }
+            catch (Exception)
+            {
+                fbin.CribLength = 0;
+            }
 
-        //    try
-        //    {
-        //        fbin.CribWidth = double.TryParse(inViewModel.CribWidth, out d) ? d : 0;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        fbin.CribLength = 0;
-        //    }
+            try
+            {
+                fbin.CribWidth = double.TryParse(inViewModel.CribWidth, out d) ? d : 0;
+            }
+            catch (Exception)
+            {
+                fbin.CribLength = 0;
+            }
 
-        //    return fbin;
-        //}
+            return fbin;
+        }
 
-        //public static GravityBin MapBinToGravityType(this BinViewModel inViewModel, IBinstance bin)
-        //{
-        //    GravityBin gbin = new GravityBin(bin);
-        //    double d;
-        //    try
-        //    {
-        //        gbin.ChuteLength = double.TryParse(inViewModel.ChuteLength, out d) ? d : 0.0;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        gbin.ChuteLength = 0;
-        //    }
+        public static GravityBin MapBinToGravityType(this BinViewModel inViewModel, IBinstance bin)
+        {
+            GravityBin gbin = new GravityBin(bin);
+            double d;
+            try
+            {
+                gbin.ChuteLength = double.TryParse(inViewModel.ChuteLength, out d) ? d : 0.0;
+            }
+            catch (Exception)
+            {
+                gbin.ChuteLength = 0;
+            }
 
-        //    try
-        //    {
-        //        gbin.HopperHeight = double.TryParse(inViewModel.HopperHeight, out d) ? d : 0;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        gbin.HopperHeight = 0;
-        //    }
+            try
+            {
+                gbin.HopperHeight = double.TryParse(inViewModel.HopperHeight, out d) ? d : 0;
+            }
+            catch (Exception)
+            {
+                gbin.HopperHeight = 0;
+            }
 
-        //    try
-        //    {
-        //        gbin.RectangleHeight = double.TryParse(inViewModel.RectangleHeight, out d) ? d : 0.0;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        gbin.RectangleHeight = 0;
-        //    }
+            try
+            {
+                gbin.RectangleHeight = double.TryParse(inViewModel.RectangleHeight, out d) ? d : 0.0;
+            }
+            catch (Exception)
+            {
+                gbin.RectangleHeight = 0;
+            }
 
-        //    try
-        //    {
-        //        gbin.RectangleLength = double.TryParse(inViewModel.RectangleLength, out d) ? d : 0;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        gbin.RectangleLength = 0;
-        //    }
+            try
+            {
+                gbin.RectangleLength = double.TryParse(inViewModel.RectangleLength, out d) ? d : 0;
+            }
+            catch (Exception)
+            {
+                gbin.RectangleLength = 0;
+            }
 
-        //    try
-        //    {
-        //        gbin.RectangleWidth = double.TryParse(inViewModel.RectangleWidth, out d) ? d : 0.0;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        gbin.RectangleWidth = 0;
-        //    }
+            try
+            {
+                gbin.RectangleWidth = double.TryParse(inViewModel.RectangleWidth, out d) ? d : 0.0;
+            }
+            catch (Exception)
+            {
+                gbin.RectangleWidth = 0;
+            }
 
 
-        //    return gbin;
-        //}
+            return gbin;
+        }
 
-        //public static PolygonBin MapBinToPolyType(this BinViewModel inViewModel, IBinstance bin)
-        //{
-        //    PolygonBin pbin = new PolygonBin(bin);
+        public static PolygonBin MapBinToPolyType(this BinViewModel inViewModel, IBinstance bin)
+        {
+            PolygonBin pbin = new PolygonBin(bin);
 
-        //    double d;
-        //    try
-        //    {
-        //        pbin.SideHeight = double.TryParse(inViewModel.SideHeight, out d) ? d : 0.0;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        pbin.SideHeight = 0;
-        //    }
+            double d;
+            try
+            {
+                pbin.SideHeight = double.TryParse(inViewModel.SideHeight, out d) ? d : 0.0;
+            }
+            catch (Exception)
+            {
+                pbin.SideHeight = 0;
+            }
 
-        //    try
-        //    {
-        //        pbin.SideWidth = double.TryParse(inViewModel.SideWidth, out d) ? d : 0;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        pbin.SideWidth = 0;
-        //    }
+            try
+            {
+                pbin.SideWidth = double.TryParse(inViewModel.SideWidth, out d) ? d : 0;
+            }
+            catch (Exception)
+            {
+                pbin.SideWidth = 0;
+            }
 
-        //    try
-        //    {
-        //        int i;
-        //        pbin.NumberOfSides = int.TryParse(inViewModel.NumberOfSides, out i) ? i : 0;
-        //    }
-        //    catch (Exception)
-        //    {
+            try
+            {
+                int i;
+                pbin.NumberOfSides = int.TryParse(inViewModel.NumberOfSides, out i) ? i : 0;
+            }
+            catch (Exception)
+            {
 
-        //        pbin.NumberOfSides = 0;
-        //    }
+                pbin.NumberOfSides = 0;
+            }
 
-        //    return pbin;
-        //}
+            return pbin;
+        }
 
-        //public static RoundBin MapBinToRoundType(this BinViewModel inViewModel, IBinstance bin)
-        //{
-        //    RoundBin rbin = new RoundBin(bin);
+        public static RoundBin MapBinToRoundType(this BinViewModel inViewModel, IBinstance bin)
+        {
+            RoundBin rbin = new RoundBin(bin);
 
-        //    try
-        //    {
-        //        switch (inViewModel.HasHopper)
-        //        {
-        //            case 0:
-        //                rbin.HasHopper = true;
-        //                break;
-        //            case 1:
-        //                rbin.HasHopper = false;
-        //                break;
-        //            default:
-        //                rbin.HasHopper = null;
-        //                break;
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        rbin.HasHopper = null;
-        //    }
+            try
+            {
+                switch (inViewModel.HasHopper)
+                {
+                    case 0:
+                        rbin.HasHopper = true;
+                        break;
+                    case 1:
+                        rbin.HasHopper = false;
+                        break;
+                    default:
+                        rbin.HasHopper = null;
+                        break;
+                }
+            }
+            catch (Exception)
+            {
+                rbin.HasHopper = null;
+            }
 
-        //    double d;
-        //    try
-        //    {
-        //        rbin.Radius = double.TryParse(inViewModel.Radius, out d) ? d : 0.0;
+            double d;
+            try
+            {
+                rbin.Radius = double.TryParse(inViewModel.Radius, out d) ? d : 0.0;
 
-        //        rbin.Circumference = rbin.Radius * 2 * Math.PI;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        rbin.Radius = 0;
-        //        rbin.Circumference = 0;
-        //    }
+                rbin.Circumference = rbin.Radius * 2 * Math.PI;
+            }
+            catch (Exception)
+            {
+                rbin.Radius = 0;
+                rbin.Circumference = 0;
+            }
 
-        //    try
-        //    {
-        //        rbin.WallHeight = double.TryParse(inViewModel.WallHeight, out d) ? d : 0;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        rbin.WallHeight = 0;
-        //    }
+            try
+            {
+                rbin.WallHeight = double.TryParse(inViewModel.WallHeight, out d) ? d : 0;
+            }
+            catch (Exception)
+            {
+                rbin.WallHeight = 0;
+            }
 
-        //    try
-        //    {
-        //        rbin.RoofHeight = double.TryParse(inViewModel.RoofHeight, out d) ? d : 0;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        rbin.RoofHeight = 0;
-        //    }
+            try
+            {
+                rbin.RoofHeight = double.TryParse(inViewModel.RoofHeight, out d) ? d : 0;
+            }
+            catch (Exception)
+            {
+                rbin.RoofHeight = 0;
+            }
 
-        //    try
-        //    {
-        //        rbin.HopperHeight = double.TryParse(inViewModel.HopperHeight, out d) ? d : 0;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        rbin.HopperHeight = 0;
-        //    }
+            try
+            {
+                rbin.HopperHeight = double.TryParse(inViewModel.HopperHeight, out d) ? d : 0;
+            }
+            catch (Exception)
+            {
+                rbin.HopperHeight = 0;
+            }
 
-        //    return rbin;
-        //}
+            return rbin;
+        }
 
         public static YTYData MapViewModelToYTY(this BinViewModel inViewModel)
         {

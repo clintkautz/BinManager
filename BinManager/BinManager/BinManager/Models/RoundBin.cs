@@ -32,6 +32,11 @@ namespace BinManager.Models
             base.Notes = bin.Notes;
             base.YearCollected = bin.YearCollected;
             base.YTYDatas = bin.YTYDatas;
+            //Type t = bin.GetType();
+            //if (t.Equals(typeof(RoundBin)))
+            //{
+
+            //}
         }
     }
 }

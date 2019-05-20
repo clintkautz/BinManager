@@ -8,8 +8,7 @@ namespace BinManager.Models
     {
         MainMenu,
         NewBin,
-        Map,
-        Items
+        Map
     }
     public class HomeMenuItem
     {
