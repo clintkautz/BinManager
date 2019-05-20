@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BinManager.ViewModels"
+             x:Class="BinManager.Views.MainMenu"
+             Title="{Binding Title}">
+
+    <ContentPage.BindingContext>
+        <vm:MainMenuViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <!--Page Level Resources: Compatible with Xamarin Live Player -->
+            <Color x:Key="Primary">#2196F3</Color>
+            <Color x:Key="Accent">#f2f2f2</Color>
+            <Color x:Key="LightTextColor">#96d1ff</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <StackLayout BackgroundColor="{StaticResource LightTextColor}" 
+                     Orientation="Vertical" 
+                     Padding="1,1,1,1">
+                <Frame CornerRadius="10"
+                       BackgroundColor="{StaticResource Accent}"
+                       Margin="3"
+                       VerticalOptions="FillAndExpand">
+                    <StackLayout BackgroundColor="{StaticResource Accent}" 
+                                 Orientation="Vertical" 
+                                 Margin="0"
+                                 VerticalOptions="FillAndExpand">
+                            <Button Margin="25,10,25,0" Text="New Entry" 
+                                    x:Name="NewEntryBtn"                         
+                                    Clicked="NewEntryBtn_Clicked"
+                                    BackgroundColor="{StaticResource Primary}"
+                                    TextColor="White"
+                                    CornerRadius="5"/>
+                            <Button Margin="25,10,25,0" Text="Map View"
+                                    x:Name="MapViewBtn" 
+                                    Clicked="MapViewBtn_Clicked"
+                                    BackgroundColor="{StaticResource Primary}"
+                                    TextColor="White"
+                                    CornerRadius="5"/>
+                    </StackLayout>
+                </Frame>            
+            </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

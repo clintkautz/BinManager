@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:esriUI="clr-namespace:Esri.ArcGISRuntime.Xamarin.Forms;assembly=Esri.ArcGISRuntime.Xamarin.Forms"
+             xmlns:mapping="clr-namespace:Esri.ArcGISRuntime.Mapping;assembly=Esri.ArcGISRuntime"
+             x:Class="BinManager.Views.MapPage"
+             Title="{Binding Title}">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem x:Name="Refresh" Order="Primary"  Text="Refresh" Priority="1" Activated="Refresh_Activated"/>
+    </ContentPage.ToolbarItems>
+
+    <!--<ContentPage.Content>
+        <StackLayout>
+            <Label Text="Welcome to Xamarin.Forms!"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
+        </StackLayout>
+    </ContentPage.Content>-->
+    <Grid>
+        <esriUI:MapView x:Name="MyMapView">
+            <esriUI:MapView.GraphicsOverlays>
+            </esriUI:MapView.GraphicsOverlays>
+        </esriUI:MapView>
+        <Grid IsVisible="false" x:Name="Search_Grid" HorizontalOptions="Start" VerticalOptions="Start" Margin="15" Padding="10" WidthRequest="325">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="200"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Entry x:Name="AddressTextBox"
+                     Grid.Row="0"
+                     Margin="0,5"
+                     TextChanged="AddressTextChanged"
+                     Placeholder="Address:"/>
+            <ListView x:Name="SuggestionList"
+                      Grid.Row="1"
+                      ItemSelected="SuggestionChosen">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Label Text="{Binding Label}" FontAttributes="Bold"/>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Button FontAttributes="Bold" FontSize="Large" TextColor="White" BackgroundColor="Blue" Grid.Row="2" x:Name="clearMapPoint_Btn" Text="Clear Searched Point" Clicked="clearMapPoint_Btn_Clicked"/>
+            <Entry x:Name="FeatureTextBox"
+                     Grid.Row="4"
+                     Margin="0,3"
+                     Placeholder="Feature:"/>
+            <Picker x:Name="choice" Grid.Row="3">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Bin Id</x:String>
+                        <x:String>Created By</x:String>
+                        <x:String>Modified By</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+            <Button FontAttributes="Bold" FontSize="Large" TextColor="White" BackgroundColor="Blue" Grid.Row="5" x:Name="QSearch" Text="Search" Clicked="QSearch_Clicked"/>
+        </Grid>
+        <Grid VerticalOptions="End" HorizontalOptions="Start" Padding="10,0,0,0">
+            <Button x:Name="Search" Text="✛" Clicked="Search_Activated" TextColor="Blue" FontAttributes="Bold"/>
+        </Grid>
+    </Grid>
+</ContentPage>

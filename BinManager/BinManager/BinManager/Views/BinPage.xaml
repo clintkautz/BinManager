@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            xmlns:iOSSpecific="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+            x:Class="BinManager.Views.BinPage"
+            Title="{Binding Title}">
+    <TabbedPage.ToolbarItems>
+        <ToolbarItem x:Name="Save" Text="Save" Clicked="Save_Clicked">
+        </ToolbarItem>
+    </TabbedPage.ToolbarItems>
+  <!--Pages can be added as references or inline-->
+    <ContentPage Title="General" >
+        <ContentPage.Content>
+            <ScrollView>
+                <StackLayout Margin="10,35,10,10" x:Name="GeneralStack">
+                    <ActivityIndicator x:Name="activityIndicator_newEntry" Color="Black"/>
+                    <Frame Margin="0,20,0,0" x:Name="BinPicFrame" HorizontalOptions="Center" OutlineColor="Blue" Padding="2">
+                        <Image x:Name="BinPic"/>
+                    </Frame>
+
+                    <Label FontAttributes="Bold" Text="Employee #" x:Name="EmployeeLabel"/>
+                    <Entry x:Name="EmployeeNumTxtBox" />
+                    <!--TextChanged="EmployeeNumTxtBox_Changed"--> 
+                    
+                    <Label x:Name="IdentifierLbl" FontAttributes="Bold" Text="Identifier:"></Label>
+                    <Entry x:Name="IdentifierEntry" Text="{Binding Identifier}" />
+
+                    <Label x:Name="CreatedByLabel" FontAttributes="Bold" Text="Created By:"></Label>
+                    <Entry x:Name="CreatedBy" Text="{Binding CreatedBy}"/>
+
+                    <Label x:Name="ModifiedByLabel" FontAttributes="Bold" Text="Modified By:"></Label>
+                    <Entry x:Name="ModifiedBy" Text="{Binding ModifiedBy}"/>
+                    
+                    <Label x:Name="BinTypeLabel" Text="Bin Type:" FontAttributes="Bold" Margin="0,5,0,0"/>
+                    <Picker x:Name= "BinType" SelectedIndex="{Binding BinType}" >
+                        <Picker.ItemsSource>
+                            <x:Array Type="{x:Type x:String}">
+                                <x:String>Flat Storage</x:String>
+                                <x:String>Gravity Wagon</x:String>
+                                <x:String>Polygon Structure</x:String>
+                                <x:String>Round Storage</x:String>
+                            </x:Array>
+                        </Picker.ItemsSource>
+                    </Picker>
+                    
+                    <Label Text="Year Collected" FontAttributes="Bold" Margin="0,5,0,0"/>
+                    <Entry Text ="{Binding YearCollected}" Keyboard="Numeric" MaxLength="4" x:Name="YearCollected" />
+
+                    <Label Text="Owned or Leased" FontAttributes="Bold" Margin="0,5,0,0"/>
+                    <Picker x:Name="Owned" SelectedIndex="{Binding Owned}" >
+                        <Picker.ItemsSource>
+                            <x:Array Type="{x:Type x:String}">
+                                <x:String>Owned</x:String>
+                                <x:String>Leased</x:String>
+                            </x:Array>
+                        </Picker.ItemsSource>
+                    </Picker>
+
+                    <Label Text="Hopper" x:Name="HasHopperLabel" FontAttributes="Bold" Margin="0,5,0,0" />
+                    <Picker x:Name="HasHopper" SelectedIndex="{Binding HasHopper}" >
+                        <Picker.ItemsSource>
+                            <x:Array Type="{x:Type x:String}">
+                                <x:String>Yes</x:String>
+                                <x:String>No</x:String>
+                            </x:Array>
+                        </Picker.ItemsSource>
+                    </Picker>
+                    
+                    <Label Text="Drying Device" FontAttributes="Bold" Margin="0,5,0,0"/>
+                    <Picker x:Name="HasDryingDevice" SelectedIndex="{Binding HasDryingDevice}">
+                        <Picker.ItemsSource>
+                            <x:Array Type="{x:Type x:String}">
+                                <x:String>Yes</x:String>
+                                <x:String>No</x:String>
+                            </x:Array>
+                        </Picker.ItemsSource>
+                    </Picker>
+                    
+                    <Label Text="Grain Height Indicator" FontAttributes="Bold" Margin="0,5,0,0"/>
+                    <Picker x:Name="HasGrainHeightIndicator" SelectedIndex="{Binding HasGrainHeightIndicator}"  >
+                        <Picker.ItemsSource>
+                            <x:Array Type="{x:Type x:String}">
+                                <x:String>Yes</x:String>
+                                <x:String>No</x:String>
+                            </x:Array>
+                        </Picker.ItemsSource>
+                    </Picker>
+                    
+                    <Label Text="Ladder Type" FontAttributes="Bold" Margin="0,5,0,0"/>
+                    <Picker x:Name="LadderType" SelectedIndex="{Binding LadderType}" >
+                        <Picker.ItemsSource>
+                            <x:Array Type="{x:Type x:String}">
+                                <x:String>None</x:String>
+                                <x:String>Ladder</x:String>
+                                <x:String>Stairs</x:String>
+                            </x:Array>
+                        </Picker.ItemsSource>
+                    </Picker>
+                    
+                    <Label Text="Notes" FontAttributes="Bold" Margin="0,5,0,0"/>
+                    <Editor MaxLength="256" Text="{Binding Notes}" HeightRequest="100" x:Name="Notes" />
+                </StackLayout>
+            </ScrollView>
+        </ContentPage.Content>
+    </ContentPage>
+    
+  <ContentPage Title="Capacity">
+    <ContentPage.Content>
+        <ScrollView>
+                <!--<StackLayout Margin="10,35,10,10" x:Name="CapcaityStack">
+                
+                    <Label Text="" x:Name="TypeLable" HorizontalOptions="CenterAndExpand" />
+                    Flat Bin
+                    <Label Text="Crib Width:" x:Name="CribWidthLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                    <Entry Placeholder="Crib Width" Text="{Binding CribWidth}" Keyboard="Numeric" x:Name="CribWidth" />
+
+                    <Label Text="Crib Length:" x:Name="CribLengthLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                    <Entry Placeholder="Crib Length" Text="{Binding CribLength}" Keyboard="Numeric" x:Name="CribLength" />
+
+                    Gravity Bin
+                    <Label Text="Rectangle Height:" x:Name="RectangleHeightLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                    <Entry Placeholder="Rectangle Height" Text="{Binding RectangleHeight}" Keyboard="Numeric" x:Name="RectangleHeight" />
+
+                    <Label Text="Rectangle Width:" x:Name="RectangleWidthLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                    <Entry Placeholder="Rectangle Width" Text="{Binding RectangleWidth}" Keyboard="Numeric" x:Name="RectangleWidth" />
+
+                    <Label Text="Rectangle Length:" x:Name="RectangleLengthLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                    <Entry Placeholder="Rectangle Length" Text="{Binding RectangleLength}" Keyboard="Numeric" x:Name="RectangleLength" />
+
+                    <Label Text="Chute length:" x:Name="ChuteLengthLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                    <Entry Placeholder="Chute Length" Text="{Binding ChuteLength}" Keyboard="Numeric" x:Name="ChuteLength" />
+
+                    <Label Text="Hopper Height:" x:Name="HopperHeightLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                    <Entry Placeholder="Hopper Height" Text="{Binding HopperHeight}" Keyboard="Numeric" x:Name="HopperHeight" />
+
+                    Polygon Bin
+                    <Label Text="Side Height:" x:Name="SideHeightLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                    <Entry Placeholder="Side Height" Text="{Binding SideHeight}" Keyboard="Numeric" x:Name="SideHeight" />
+
+                    <Label Text="Side Width:" x:Name="SideWidthLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                    <Entry Placeholder="Side Width" Text="{Binding SideWidth}" Keyboard="Numeric" x:Name="SideWidth" />
+
+                    <Label Text="Number of Sides:" x:Name="NumberOfSidesLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                    <Entry Placeholder="Number of Sides" Text="{Binding NumberOfSides}" Keyboard="Numeric" x:Name="NumberOfSides" />
+
+                    Round Bin
+                    <Label Text="Radius:" x:Name="RadiusLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                    <Entry Placeholder="Radius" Text="{Binding Radius}" Keyboard="Numeric" x:Name="Radius"/>
+
+                    <Label Text="Wall Height:" x:Name="WallHeightLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                    <Entry Placeholder="Wall Height" Text="{Binding WallHeight}" Keyboard="Numeric" x:Name="WallHeight" />
+
+                    <Label Text="Roof Height:" x:Name="RoofHeightLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                    <Entry Placeholder="Roof Height" Text="{Binding RoofHeight}" Keyboard="Numeric" x:Name="RoofHeight"/>
+
+                    <Label Text="Hopper Height:" x:Name="RoundHopperHeightLabel" FontAttributes="Bold" Margin="0,5,0,0" />
+                    <Entry Placeholder="Hopper Height" Text="{Binding RoundHopperHeight}" Keyboard="Numeric" x:Name="RoundHopperHeight" />
+                
+            </StackLayout>-->
+        </ScrollView>
+    </ContentPage.Content>
+  </ContentPage>
+    
+  <ContentPage Title="Contents">
+        <ContentPage.Content>
+            <StackLayout>
+                <!--<StackLayout Margin="10,35,10,10">
+                    <Label Text="" HorizontalOptions="CenterAndExpand" x:Name="ContentsLabel"/>
+                    <Label Text="Total Grain Volume: " HorizontalOptions="CenterAndExpand" x:Name="VolumeLabel"/>
+                </StackLayout>
+                <ScrollView>
+                    <StackLayout Margin="10,35,10,10" x:Name="ContentStack">
+                        <Label Text="Crop Year:" x:Name="CropYearLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                        <Picker x:Name="CropYear"
+                                SelectedIndex="{Binding CropYear}" 
+                                SelectedIndexChanged="OnDateSelectedAsync"
+                                iOSSpecific:Picker.UpdateMode="WhenFinished"/>
+
+                        <Label Text="Crop:" x:Name="CropLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                        <Entry Placeholder="Crop" Text="{Binding Crop}" x:Name="Crop" />
+
+                        <Label Text="Grain Height:" x:Name="GrainHeightLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                        <Entry Placeholder="Grain Height" Text="{Binding GrainHeight}" Keyboard="Numeric" x:Name="GrainHeight" TextChanged="GrainHeight_Changed"/>
+
+                        <Label Text="Grain in Hopper Height:" x:Name="GrainHopperHeightLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                        <Entry Placeholder="Grain in Hopper Height" Text="{Binding GrainHopperHeight}" Keyboard="Numeric" x:Name="GrainHopperHeight" TextChanged="GrainHopperHeight_Changed"/>
+
+                        <Label Text="Grain Cone Height:" x:Name="GrainConeHeightLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                        <Entry Placeholder="Grain Cone Height" Text="{Binding GrainConeHeight}" Keyboard="Numeric" x:Name="GrainConeHeight" TextChanged="GrainHeight_Changed"/>
+
+                        <Label Text="Moisture %:" x:Name="MositurePercentLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                        <Entry Placeholder="Moisture %" Text="{Binding MoisturePercent}" Keyboard="Numeric" x:Name="MoisturePercent" />
+
+                        <Label Text="Moisture Factor:" x:Name="MositureFactorLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                        <Entry Placeholder="Moisture Factor" Text="{Binding MoistureFactor}" Keyboard="Numeric" x:Name="MoistureFactor" />
+
+                        <Label Text="Test Weight:" x:Name="TestWeightLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                        <Entry Placeholder="Test Weight" Text="{Binding TestWeight}" Keyboard="Numeric" x:Name="TestWeight" />
+
+                        <Label Text="Pack Factor:" x:Name="PackFactorLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                        <Entry Placeholder="Pack Factor" Text="{Binding PackFactor}" Keyboard="Numeric" x:Name="PackFactor" />
+
+                        <Label Text="Dockage %:" x:Name="DockagePercentLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                        <Entry Placeholder="Dockage %" Text="{Binding DockagePercent}" Keyboard="Numeric" x:Name="DockagePercent" />
+
+                        <Label Text="Dockage Factor:" x:Name="DockageFactorLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                        <Entry Placeholder="Dockage Factor" Text="{Binding DockageFactor}" Keyboard="Numeric" x:Name="DockageFactor" />
+
+                        <Label Text="Conversion Factor:" x:Name="ConversionFactorLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                        <Picker x:Name= "ConversionFactor" SelectedIndex="{Binding ConversionFactor}" iOSSpecific:Picker.UpdateMode="WhenFinished">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                    <x:String>.4 - Ears of Corn</x:String>
+                                    <x:String>.8 - Shelled Corn, Oats, etc.</x:String>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+
+                        <Label Text="Shell Factor:" x:Name="ShellFactorLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                        <Entry Placeholder="Shell Factor" Text="{Binding ShellFactor}" Keyboard="Numeric" x:Name="ShellFactor" />
+
+                        <Label Text="Total Deduction Volume:" x:Name="TotalDeductionVolumeLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                        <Entry Placeholder="Total Deduction Volume" Text="{Binding TotalDeductionVolume}" Keyboard="Numeric" x:Name="TotalDeductionVolume" />
+
+                        <Label Text="Notes:" x:Name="NotesLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
+                        <Editor MaxLength="256" HeightRequest="100" Text="{Binding ContentsNotes}" Placeholder="Notes" x:Name="ContentsNotes" />-->
+                        
+                    <!--</StackLayout>
+                </ScrollView>-->
+            </StackLayout>
+        </ContentPage.Content>
+    </ContentPage>
+    
+</TabbedPage>
