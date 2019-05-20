@@ -1,7 +1,7 @@
 ﻿using System;
 using Xamarin.Forms;
 
-namespace NAUCountry.Utilities.Extensions
+namespace BinManager.Utilities.Extensions
 {
     public static class ActivityIndicatorExtensions
     {

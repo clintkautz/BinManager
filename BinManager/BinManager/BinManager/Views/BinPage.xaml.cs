@@ -1,6 +1,6 @@
 ﻿using BinManager.Models;
 using BinManager.Utilities.Enums;
-using BinManager.Utilities;
+using BinManager.Utilities.Extensions;
 using BinManager.ViewModels;
 using Esri.ArcGISRuntime.Data;
 using Newtonsoft.Json;
@@ -123,6 +123,8 @@ namespace BinManager.Views
         #region Save
         private async void Save_Clicked(object sender, EventArgs e)
         {
+            activityIndicator_save.On();
+            activityIndicatorCapacity_save.On();
             if (viewModel.New)
             {
                 RemoveErrors();
@@ -131,11 +133,14 @@ namespace BinManager.Views
                 {
                     if (await viewModel.ValdiateAsync())
                     {
+                        GeneralStack.IsEnabled = false;
+                        CapcaityStack.IsEnabled = false;
                         await SaveAsync();
                     }
                     else
                     {
-                        DisplayErrors();
+                        activityIndicatorCapacity_save.Off();
+                        DisplayErrorsAsync();
                     }
                 }
             }
@@ -144,15 +149,20 @@ namespace BinManager.Views
                 RemoveErrors();
                 if (await viewModel.ValdiateAsync())
                 {
+                    GeneralStack.IsEnabled = false;
+                    CapcaityStack.IsEnabled = false;
                     await EditAsync();
                 }
                 else
                 {
-                    DisplayErrors();
+                    activityIndicatorCapacity_save.Off();
+                    await DisplayErrorsAsync();
                 }
             }
             else
             {//Edit Clicked for the first time since last save
+                activityIndicator_save.Off();
+                activityIndicatorCapacity_save.Off();
                 Save.Text = "Save";
                 viewModel.Edit = true;
                 //enable stacks
@@ -170,7 +180,8 @@ namespace BinManager.Views
             {
                 case ArcCrudEnum.Success:
                     await DisplayAlert("", "Bin successfully edited", "Ok");
-                    //activityIndicator_edit.Off();
+                    activityIndicator_save.Off();
+                    activityIndicatorCapacity_save.Off();
                     viewModel.New = false;
                     viewModel.Edit = false;
                     Save.Text = "Edit";
@@ -180,11 +191,13 @@ namespace BinManager.Views
                     break;
                 case ArcCrudEnum.Failure:
                     await DisplayAlert("Error", "Error occurred", "Ok");
-                    //activityIndicator_edit.Off();
+                    activityIndicator_save.Off();
+                    activityIndicatorCapacity_save.Off();
                     break;
                 case ArcCrudEnum.Exception:
                     await DisplayAlert("Error", "Failed to connect to online services. Please try again", "Ok");
-                    //activityIndicator_edit.Off();
+                    activityIndicatorCapacity_save.Off();
+                    activityIndicator_save.Off();
                     break;
             }
         }
@@ -196,8 +209,9 @@ namespace BinManager.Views
             switch (addResult)
             {
                 case ArcCrudEnum.Success:
-                    //activityIndicator_process.Off();
                     await DisplayAlert("Success!", "New bin successfully added", "Ok");
+                    activityIndicator_save.Off();
+                    activityIndicatorCapacity_save.Off();
                     viewModel.New = false;
                     viewModel.Edit = false;
                     Save.Text = "Edit";
@@ -206,12 +220,14 @@ namespace BinManager.Views
                     SetCapcityPage();
                     break;
                 case ArcCrudEnum.Failure:
-                    //activityIndicator_process.Off();
                     await DisplayAlert("Error", "Error occurred, try again", "Ok");
+                    activityIndicator_save.Off();
+                    activityIndicatorCapacity_save.Off();
                     break;
                 case ArcCrudEnum.Exception:
-                    //activityIndicator_process.Off();
                     await DisplayAlert("Error", "Failed to connect to online services. Please try again", "Ok");
+                    activityIndicator_save.Off();
+                    activityIndicatorCapacity_save.Off();
                     break;
             }
         }
@@ -336,8 +352,10 @@ namespace BinManager.Views
             return dictionary;
         }
 
-        private void DisplayErrors()
+        private async Task DisplayErrorsAsync()
         {
+            await DisplayAlert("Error", "Please fix errors in red", "Ok");
+
             foreach (var key in viewModel.Errors.Keys)
             {
                 switch (key)

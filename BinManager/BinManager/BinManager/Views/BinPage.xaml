@@ -17,7 +17,7 @@
                     <Frame Margin="0,20,0,0" x:Name="BinPicFrame" HorizontalOptions="Center" OutlineColor="Blue" Padding="2">
                         <Image x:Name="BinPic"/>
                     </Frame>
-
+                    <ActivityIndicator x:Name="activityIndicator_save" Color="Black"/>
                     <Label FontAttributes="Bold" Text="Employee #" x:Name="EmployeeLabel"/>
                     <Entry x:Name="EmployeeNumTxtBox" TextChanged="EmployeeNumTxtBox_Changed"/>
                     <!----> 
@@ -112,7 +112,7 @@
                 </StackLayout>
                 <ScrollView>
                     <StackLayout Margin="10,35,10,10" x:Name="CapcaityStack">
-                        
+                        <ActivityIndicator x:Name="activityIndicatorCapacity_save" Color="Black"/>
                         <StackLayout x:Name="FlatStack">
                             <!--Flat Bin-->
                             <Label Text="Crib Width:" x:Name="CribWidthLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
