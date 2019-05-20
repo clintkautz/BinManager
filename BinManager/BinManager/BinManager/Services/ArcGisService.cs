@@ -166,8 +166,8 @@ namespace BinManager
 
                 double dr;
 
-                double.TryParse(bin.BinVolume, out dr);
-                attributes.Add("bin_volume", dr);
+                //double.TryParse(bin.BinVolume, out dr);
+                //attributes.Add("bin_volume", dr);
 
                 //bin type specific logic below
                 Type t = bin.GetType();
@@ -330,216 +330,195 @@ namespace BinManager
         }
         #endregion
 
-        /*
-                public static async Task<ArcCrudEnum> EditBin(IBinViewModel binViewModel)
+        
+        public static async Task<ArcCrudEnum> EditBin(BinViewModel binViewModel)
+        {
+            IBinstance bin = binViewModel.Binstance;
+            ArcGISFeature featureToEdit = binViewModel.ArcGISFeature;
+
+            try
+            {
+                await featureToEdit.LoadAsync();
+
+                featureToEdit.Attributes["identifier"] = bin.Identifier;
+                featureToEdit.Attributes["modified_by"] = binViewModel.EmpoyeeNumber;
+
+                switch (bin.BinType)
                 {
-                    IBinstance bin = binViewModel.BaseBin;
-                    ArcGISFeature featureToEdit = binViewModel.ArcGISFeature;
-                    //BinViewModel _binViewModel = (BinViewModel)binViewModel;
+                    case BinTypeEnum.RoundStorage:
+                        featureToEdit.Attributes["bin_type"] = "round_storage";
+                        break;
+                    case BinTypeEnum.GravityWagon:
+                        featureToEdit.Attributes["bin_type"] = "gravity_wagon";
+                        break;
+                    case BinTypeEnum.PolygonStructure:
+                        featureToEdit.Attributes["bin_type"] = "polygon_structure";
+                        break;
+                    case BinTypeEnum.FlatStructure:
+                        featureToEdit.Attributes["bin_type"] = "flat_structure";
+                        break;
+                }
 
-                    try
+                featureToEdit.Attributes["year_collected"] = bin.YearCollected;
+
+
+                if (bin.IsLeased.HasValue)
+                {
+                    featureToEdit.Attributes["owned_or_leased"] = bin.IsLeased.Value ? "leased" : "owned";
+                }
+
+                if (bin.HasDryingDevice.HasValue)
+                {
+                    featureToEdit.Attributes["drying_device"] = bin.HasDryingDevice.Value ? "true" : "false";
+                }
+
+                if (bin.HasGrainHeightIndicator.HasValue)
+                {
+                    featureToEdit.Attributes["bin_level_indicator_device"] = bin.HasGrainHeightIndicator.Value ? "true" : "false";
+                }
+
+                switch (bin.LadderType)
+                {
+                    case Ladder.None:
+                        featureToEdit.Attributes["ladder_type"] = "none";
+                        break;
+                    case Ladder.Ladder:
+                        featureToEdit.Attributes["ladder_type"] = "ladder";
+                        break;
+                    case Ladder.Stairs:
+                        featureToEdit.Attributes["ladder_type"] = "stairs";
+                        break;
+                }
+
+                featureToEdit.Attributes["notes"] = bin.Notes;
+
+                double dr;
+                //double.TryParse(bin.BinVolume, out dr);
+                //featureToEdit.Attributes["bin_volume"] = dr;
+
+                //bin type specific logic below
+                Type t = bin.GetType();
+                if (bin.BinType == BinTypeEnum.FlatStructure)
+                {
+                    if (t.Equals(typeof(FlatBin)))
                     {
-                        await featureToEdit.LoadAsync();
-
-                        featureToEdit.Attributes["identifier"] = bin.Identifier;
-                        featureToEdit.Attributes["modified_by"] = GlobalSettings.EmployeeNum;
-
-                        switch (bin.BinType)
+                        FlatBin flat = (FlatBin)bin;
+                        featureToEdit.Attributes["crib_height"] = flat.CribLength;
+                        featureToEdit.Attributes["crib_width"] = flat.CribWidth;
+                    }                    
+                }
+                else if (bin.BinType == BinTypeEnum.GravityWagon)
+                {
+                    if (t.Equals(typeof(GravityBin)))
+                    {
+                        GravityBin gravityBin = (GravityBin)bin;
+                        featureToEdit.Attributes["chute_length"] = gravityBin.ChuteLength;
+                        featureToEdit.Attributes["hopper_height"] = gravityBin.HopperHeight;
+                        featureToEdit.Attributes["rectangle_height"] = gravityBin.RectangleHeight;
+                        featureToEdit.Attributes["rectangle_length"] = gravityBin.RectangleLength;
+                        featureToEdit.Attributes["rectangle_width"] = gravityBin.RectangleWidth;
+                    }                    
+                }
+                else if (bin.BinType == BinTypeEnum.PolygonStructure)
+                {
+                    if (t.Equals(typeof(PolygonBin)))
+                    {
+                        PolygonBin polygonBin = (PolygonBin)bin;
+                        featureToEdit.Attributes["side_height"] = polygonBin.SideHeight;
+                        featureToEdit.Attributes["side_width"] = polygonBin.SideWidth;
+                        featureToEdit.Attributes["number_of_sides"] = polygonBin.NumberOfSides;
+                    }                   
+                }
+                else if (bin.BinType == BinTypeEnum.RoundStorage)
+                {
+                    if (t.Equals(typeof(PolygonBin)))
+                    {
+                        RoundBin round = (RoundBin)bin;
+                        if (round.HasHopper.HasValue)
                         {
-                            case BinTypeEnum.RoundStorage:
-                                featureToEdit.Attributes["bin_type"] = "round_storage";
-                                break;
-                            case BinTypeEnum.GravityWagon:
-                                featureToEdit.Attributes["bin_type"] = "gravity_wagon";
-                                break;
-                            case BinTypeEnum.PolygonStructure:
-                                featureToEdit.Attributes["bin_type"] = "polygon_structure";
-                                break;
-                            case BinTypeEnum.FlatStructure:
-                                featureToEdit.Attributes["bin_type"] = "flat_structure";
-                                break;
+                            featureToEdit.Attributes["has_hopper"] = round.HasHopper.Value ? "true" : "false";
                         }
 
-                        featureToEdit.Attributes["year_collected"] = bin.YearCollected;
+                        featureToEdit.Attributes["radius"] = round.Radius;
+                        featureToEdit.Attributes["wall_height"] = round.WallHeight;
+                        featureToEdit.Attributes["roof_height"] = round.RoofHeight;
+                        featureToEdit.Attributes["hopper_height"] = round.HopperHeight;
+                    }                    
+                }
+
+                
+                // can't be null
+                if (binViewModel.Binstance.YTYDatas == null)
+                {
+                    binViewModel.Binstance.YTYDatas = new List<YTYData>();
+                }
+                //use data in _binViewModel
+
+                System.Diagnostics.Debug.Print("Feature can edit attachments" + (featureToEdit.CanEditAttachments ? "Yes" : "No"));
+                //-------- Formatting --------
+                //create json
+                string jsonString = JsonConvert.SerializeObject(binViewModel.Binstance.YTYDatas);
+
+                //System.Diagnostics.Debug.Print(jsonString);
+                //System.Diagnostics.Debug.Print(((Binstance)(binViewModel.Binstance)).YTYDatasString());
+                // convert json to byte array
+                byte[] byteArray = Encoding.UTF8.GetBytes(jsonString);
 
 
-                        if (bin.IsLeased.HasValue)
-                        {
-                            featureToEdit.Attributes["owned_or_leased"] = bin.IsLeased.Value ? "leased" : "owned";
-                        }
-
-                        if (bin.HasDryingDevice.HasValue)
-                        {
-                            featureToEdit.Attributes["drying_device"] = bin.HasDryingDevice.Value ? "true" : "false";
-                        }
-
-                        if (bin.HasGrainHeightIndicator.HasValue)
-                        {
-                            featureToEdit.Attributes["bin_level_indicator_device"] = bin.HasGrainHeightIndicator.Value ? "true" : "false";
-                        }
-
-                        switch (bin.LadderType)
-                        {
-                            case Ladder.None:
-                                featureToEdit.Attributes["ladder_type"] = "none";
-                                break;
-                            case Ladder.Ladder:
-                                featureToEdit.Attributes["ladder_type"] = "ladder";
-                                break;
-                            case Ladder.Stairs:
-                                featureToEdit.Attributes["ladder_type"] = "stairs";
-                                break;
-                        }
-
-                        featureToEdit.Attributes["notes"] = bin.Notes;
-
-                        double dr;
-                        double.TryParse(bin.BinVolume, out dr);
-                        featureToEdit.Attributes["bin_volume"] = dr;
-
-                        //bin type specific logic below
-
-                        if (bin.BinType == BinTypeEnum.FlatStructure)
-                        {
-                            FlatBin flat = binViewModel.FlatBin;
-
-                            featureToEdit.Attributes["crib_height"] = flat.CribLength;
-                            featureToEdit.Attributes["crib_width"] = flat.CribWidth;
-                        }
-                        else if (bin.BinType == BinTypeEnum.GravityWagon)
-                        {
-                            GravityBin gravityBin = binViewModel.GravityBin;
-
-                            featureToEdit.Attributes["chute_length"] = gravityBin.ChuteLength;
-                            featureToEdit.Attributes["hopper_height"] = gravityBin.HopperHeight;
-                            featureToEdit.Attributes["rectangle_height"] = gravityBin.RectangleHeight;
-                            featureToEdit.Attributes["rectangle_length"] = gravityBin.RectangleLength;
-                            featureToEdit.Attributes["rectangle_width"] = gravityBin.RectangleWidth;
-                        }
-                        else if (bin.BinType == BinTypeEnum.PolygonStructure)
-                        {
-                            PolygonBin polygonBin = binViewModel.PolygonBin;
-
-                            featureToEdit.Attributes["side_height"] = polygonBin.SideHeight;
-                            featureToEdit.Attributes["side_width"] = polygonBin.SideWidth;
-                            featureToEdit.Attributes["number_of_sides"] = polygonBin.NumberOfSides;
-                        }
-                        else if (bin.BinType == BinTypeEnum.RoundStorage)
-                        {
-                            RoundBin round = binViewModel.RoundBin;
-
-                            if(round.HasHopper.HasValue)
-                            {
-                                featureToEdit.Attributes["has_hopper"] = round.HasHopper.Value ? "true" : "false";
-                            }
-
-                            featureToEdit.Attributes["radius"] = round.Radius;
-                            featureToEdit.Attributes["wall_height"] = round.WallHeight;
-                            featureToEdit.Attributes["roof_height"] = round.RoofHeight;
-                            featureToEdit.Attributes["hopper_height"] = round.HopperHeight;
-                        }
-
-                        // sync features
-                        //await _featureTable.UpdateFeatureAsync(featureToEdit);
-                        //_binViewModel.ArcGISFeature = featureToEdit;
-
-                        ////----- Update YTY json file -----//
-                        //ArcCrudEnum yTYPush = await PushYTYToArc(_binViewModel);
-                        //if (yTYPush != ArcCrudEnum.Success)
-                        //{
-                        //    return yTYPush;
-                        //}
-
-                        //-----Add YTY json file---- -//
-
-
-
-                       //ArcGISFeature agsFeature = binViewModel.ArcGISFeature;
-                       // load
-                       //await _binViewModel.ArcGISFeature.LoadAsync();
-
-                       // can't be null
-                        if (binViewModel.BaseBin.YTYDatas == null)
-                        {
-                            binViewModel.BaseBin.YTYDatas = new List<YTYData>();
-                        }
-                        //use data in _binViewModel
-
-                        System.Diagnostics.Debug.Print("Feature can edit attachments" + (featureToEdit.CanEditAttachments ? "Yes" : "No"));
-                        //-------- Formatting --------
-                        //create json
-                        string jsonString = JsonConvert.SerializeObject(binViewModel.BaseBin.YTYDatas);
-
-                        System.Diagnostics.Debug.Print(jsonString);
-                        System.Diagnostics.Debug.Print(((Binstance)(binViewModel.BaseBin)).YTYDatasString());
-                        // convert json to byte array
-                        byte[] byteArray = Encoding.UTF8.GetBytes(jsonString);
-
-
-                        //-------- ARC Connection --------
-                        //remove old YTYData
-                        List<Attachment> attachmentsToRemove = new List<Attachment>();
-                        IReadOnlyList<Attachment> attachments = await featureToEdit.GetAttachmentsAsync();
-                        foreach (Attachment attachment in attachments)
-                        {
-                            System.Diagnostics.Debug.Print(attachment.Name);
-                            if (attachment.Name.Equals(YTY_FILE_NAME))
-                            {
-                                System.Diagnostics.Debug.Print("Found YTY attachment");
-                                attachmentsToRemove.Add(attachment);
-                                //await featureToEdit.DeleteAttachmentAsync(attachment);
-                            }
-                        }
-                        System.Diagnostics.Debug.Print("Attachments to remove:");
-                        foreach (Attachment attachment in attachments)
-                        {
-                            System.Diagnostics.Debug.Print(attachment.Name);
-                        }
-                        //await featureToEdit.DeleteAttachmentsAsync(attachmentsToRemove);
-                        //System.Diagnostics.Debug.Print("Attachments removed from feature?");
-                        //await _featureTable.UpdateFeatureAsync(featureToEdit);
-
-                        //await featureToEdit.LoadAsync();
-                        // add json as an attachment - pass the name, mime type, and attachment data (bytes, etc.)
-                        //await featureToEdit.AddAttachmentAsync(YTY_FILE_NAME, "application/json", byteArray); //agsFeature
-
-                        if(attachmentsToRemove.Any())
-                        {
-                            //update the json file
-                            await featureToEdit.UpdateAttachmentAsync(attachmentsToRemove.First(), YTY_FILE_NAME, "application/json", byteArray);
-                        }
-
-                        System.Diagnostics.Debug.Print("Attachments added to feature?");
-
-                        _featureTable = (ServiceFeatureTable)featureToEdit.FeatureTable;
-
-                        // update feature after attachment added
-                        await _featureTable.UpdateFeatureAsync(featureToEdit); //agsFeature
-
-                        System.Diagnostics.Debug.Print("Feature table updated");
-
-                        // push to ArcGIS Online feature service
-                        IReadOnlyList<EditResult> editResults = await _featureTable.ApplyEditsAsync();
-
-                        System.Diagnostics.Debug.Print("Arc updated");
-
-                        foreach (var er in editResults)
-                        {
-                            if (er.CompletedWithErrors)
-                            {
-                                // handle error (er.Error.Message)
-                                return ArcCrudEnum.Failure;
-                            }
-                        }
-
-                        return ArcCrudEnum.Success;
+                //-------- ARC Connection --------
+                //remove old YTYData
+                List<Attachment> attachmentsToRemove = new List<Attachment>();
+                IReadOnlyList<Attachment> attachments = await featureToEdit.GetAttachmentsAsync();
+                foreach (Attachment attachment in attachments)
+                {
+                    System.Diagnostics.Debug.Print(attachment.Name);
+                    if (attachment.Name.Equals(YTY_FILE_NAME))
+                    {
+                        System.Diagnostics.Debug.Print("Found YTY attachment");
+                        attachmentsToRemove.Add(attachment);
                     }
-                    catch (ArcGISWebException)
+                }
+                System.Diagnostics.Debug.Print("Attachments to remove:");
+                foreach (Attachment attachment in attachments)
+                {
+                    System.Diagnostics.Debug.Print(attachment.Name);
+                }
+
+                if(attachmentsToRemove.Any())
+                {
+                    //update the json file
+                    await featureToEdit.UpdateAttachmentAsync(attachmentsToRemove.First(), YTY_FILE_NAME, "application/json", byteArray);
+                }
+
+                _featureTable = (ServiceFeatureTable)featureToEdit.FeatureTable;
+
+                // update feature after attachment added
+                await _featureTable.UpdateFeatureAsync(featureToEdit); //agsFeature
+
+                System.Diagnostics.Debug.Print("Feature table updated");
+
+                // push to ArcGIS Online feature service
+                IReadOnlyList<EditResult> editResults = await _featureTable.ApplyEditsAsync();
+
+                System.Diagnostics.Debug.Print("Arc updated");
+
+                foreach (var er in editResults)
+                {
+                    if (er.CompletedWithErrors)
                     {
-                        return ArcCrudEnum.Exception; 
+                        // handle error (er.Error.Message)
+                        return ArcCrudEnum.Failure;
                     }
                 }
 
+                return ArcCrudEnum.Success;
+            }
+            catch (ArcGISWebException)
+            {
+                return ArcCrudEnum.Exception; 
+            }
+        }
+        /*
                 public static async Task<ArcCrudEnum> DeleteBin(ArcGISFeature featureToDelete)
                 {
                     try

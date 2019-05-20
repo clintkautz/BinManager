@@ -664,7 +664,7 @@ namespace BinManager.ViewModels
                 Errors.Add(0, "Identifier is required");
                 valid = false;
             }
-            else
+            else if (New)
             {
                 var result = await ArcGisService.IdentifierAvailable(Binstance.Identifier.ToLower());
 
