@@ -86,7 +86,7 @@ namespace BinManager.Views
             //Navigation.PushAsync(_mapPage);
             Navigation.PushAsync(new MapPage()
             {
-                Title = GlobalSettings.MapViewPageTitle
+                Title = "Map"
             });
         }
     }

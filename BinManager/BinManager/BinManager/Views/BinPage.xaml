@@ -5,8 +5,8 @@
             x:Class="BinManager.Views.BinPage"
             Title="{Binding Title}">
     <TabbedPage.ToolbarItems>
-        <ToolbarItem x:Name="Save" Text="Save" Clicked="Save_Clicked">
-        </ToolbarItem>
+        <ToolbarItem x:Name="Cancel" Text="" Order="Primary"  Priority="0" Activated="Cancel_Clicked"></ToolbarItem>
+        <ToolbarItem x:Name="Save" Text="Save" Order="Primary"  Priority="1"  Activated="Save_Clicked"></ToolbarItem>        
     </TabbedPage.ToolbarItems>
   <!--Pages can be added as references or inline-->
     <ContentPage Title="General" >

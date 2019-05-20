@@ -353,7 +353,7 @@ namespace BinManager.ViewModels
 
         public BinViewModel()
         {
-            Title = "Add New Bin";
+            Title = "New Bin";
             Binstance = new Binstance();
             YTYData = new YTYData();
             //var test = dateRange;
@@ -538,7 +538,7 @@ namespace BinManager.ViewModels
 
         #region Mapping
 
-        private void FeatureMapBinType()
+        public void FeatureMapBinType()
         {
             switch (Binstance.BinType)
             {
@@ -574,7 +574,7 @@ namespace BinManager.ViewModels
 
         public void ViewModelMapBinType()
         {
-            //Binstance = this.MapToBin();
+            Binstance = this.MapToBin();
             switch (Binstance.BinType)
             {
                 case BinTypeEnum.RoundStorage:
@@ -655,7 +655,7 @@ namespace BinManager.ViewModels
         {
             Errors = new Dictionary<int, string>();
             bool valid = true;
-            Binstance = this.MapToBin();
+            //Binstance = this.MapToBin();
             ViewModelMapBinType();
             //ViewModelMapYTY();
 

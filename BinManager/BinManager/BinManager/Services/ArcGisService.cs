@@ -163,12 +163,7 @@ namespace BinManager
                 }               
 
                 attributes.Add("notes", bin.Notes);
-
-                double dr;
-
-                //double.TryParse(bin.BinVolume, out dr);
-                //attributes.Add("bin_volume", dr);
-
+                                
                 //bin type specific logic below
                 Type t = bin.GetType();
                 if (bin.BinType == BinTypeEnum.FlatStructure)
@@ -518,33 +513,33 @@ namespace BinManager
                 return ArcCrudEnum.Exception; 
             }
         }
-        /*
-                public static async Task<ArcCrudEnum> DeleteBin(ArcGISFeature featureToDelete)
+        
+        public static async Task<ArcCrudEnum> DeleteBin(ArcGISFeature featureToDelete)
+        {
+            try
+            {
+                await _featureTable.DeleteFeatureAsync(featureToDelete);
+
+                // push to ArcGIS Online feature service
+                IReadOnlyList<EditResult> editResults = await _featureTable.ApplyEditsAsync();
+
+                foreach (var er in editResults)
                 {
-                    try
+                    if (er.CompletedWithErrors)
                     {
-                        await _featureTable.DeleteFeatureAsync(featureToDelete);
-
-                        // push to ArcGIS Online feature service
-                        IReadOnlyList<EditResult> editResults = await _featureTable.ApplyEditsAsync();
-
-                        foreach (var er in editResults)
-                        {
-                            if (er.CompletedWithErrors)
-                            {
-                                // handle error (er.Error.Message)
-                                return ArcCrudEnum.Failure;
-                            }
-                        }
-
-                        return ArcCrudEnum.Success;
-                    }
-                    catch (ArcGISWebException)
-                    {
-                        return ArcCrudEnum.Exception;
+                        // handle error (er.Error.Message)
+                        return ArcCrudEnum.Failure;
                     }
                 }
-        */
+
+                return ArcCrudEnum.Success;
+            }
+            catch (ArcGISWebException)
+            {
+                return ArcCrudEnum.Exception;
+            }
+        }
+        
         //public static async Task<ArcCrudEnum> PushYTYToArc(IBinViewModel binViewModel)
         //{
         //    //ArcGISFeature agsFeature = binViewModel.ArcGISFeature;
