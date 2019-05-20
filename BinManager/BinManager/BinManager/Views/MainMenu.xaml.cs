@@ -60,18 +60,18 @@ namespace BinManager.Views
 
                 await Navigation.PushAsync(new BinPage());
 
-                //if (photo != null)
-                //{
-                //    // Navigate to next page, pass photo
-                //    await Navigation.PushAsync(new NewEntryPage(photo)
-                //    {
-                //        Title = GlobalSettings.NewEntryPageTitle
-                //    });
-                //}
-                //else
-                //{
-                //    await DisplayAlert("Error", "Photo is required", "Ok");
-                //}
+                if (photo != null)
+                {
+                    // Navigate to next page, pass photo
+                    await Navigation.PushAsync(new BinPage(photo)
+                    {
+                        Title = GlobalSettings.NewEntryPageTitle
+                    });
+                }
+                else
+                {
+                    await DisplayAlert("Error", "Photo is required", "Ok");
+                }
             }
             else
             {

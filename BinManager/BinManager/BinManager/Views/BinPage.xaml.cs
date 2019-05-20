@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Plugin.Media.Abstractions;
 
 namespace BinManager.Views
 {
@@ -39,10 +40,7 @@ namespace BinManager.Views
         {
             InitializeComponent();
 
-            BindingContext = viewModel = new BinViewModel();
-
-            //CropYear.ItemsSource = viewModel.DateRange;
-            //SetCropYear();
+            BindingContext = viewModel = new BinViewModel();           
 
             YearCollected.Text = DateTime.Now.ToString("yyyy");
             YearCollected.IsEnabled = false;
@@ -53,9 +51,48 @@ namespace BinManager.Views
             CreatedByLabel.IsEnabled = false;
             CreatedBy.IsVisible = false;
             CreatedBy.IsEnabled = false;
+            ModifiedByLabel.IsVisible = false;
+            ModifiedByLabel.IsEnabled = false;
+            ModifiedBy.IsVisible = false;
+            ModifiedBy.IsEnabled = false;
 
             HasHopperHopperDisable();
             HideCapacityFields();
+
+            //CropYear.ItemsSource = viewModel.DateRange;
+            //SetCropYear();
+            //HideContentsFields();
+
+        }
+        //Add New Bin (photo)
+        public BinPage(MediaFile photo)
+        {
+            InitializeComponent();
+
+            BindingContext = viewModel = new BinViewModel();           
+
+            YearCollected.Text = DateTime.Now.ToString("yyyy");
+            YearCollected.IsEnabled = false;
+            viewModel.Binstance.YearCollected = YearCollected.Text;
+
+            BinPicFrame.IsVisible = false;
+            BinPic.Source = ImageSource.FromStream(() => photo.GetStream());
+            BinPicFrame.IsVisible = true;
+
+            CreatedByLabel.IsVisible = false;
+            CreatedByLabel.IsEnabled = false;
+            CreatedBy.IsVisible = false;
+            CreatedBy.IsEnabled = false;
+            ModifiedByLabel.IsVisible = false;
+            ModifiedByLabel.IsEnabled = false;
+            ModifiedBy.IsVisible = false;
+            ModifiedBy.IsEnabled = false;
+
+            HasHopperHopperDisable();
+            HideCapacityFields();
+
+            //CropYear.ItemsSource = viewModel.DateRange;
+            //SetCropYear();
             //HideContentsFields();
 
         }
@@ -66,17 +103,18 @@ namespace BinManager.Views
             InitializeComponent();
 
             BindingContext = viewModel = new BinViewModel(feature);
-            
-            //CropYear.ItemsSource = viewModel.DateRange;
-            //SetCropYear();
+                       
             Save.Text = "Edit";
 
             BinPicFrame.IsVisible = false;
-            //SetImage();
-            ////CalcVolume();
-            ////disable fields
+            SetImage();
+            
             GeneralStack.IsEnabled = false;
             CapcaityStack.IsEnabled = false;
+
+            //CropYear.ItemsSource = viewModel.DateRange;
+            //SetCropYear();
+            //CalcVolume();
             //ContentStack.IsEnabled = false;
         }
 
@@ -106,7 +144,7 @@ namespace BinManager.Views
                 RemoveErrors();
                 if (await viewModel.ValdiateAsync())
                 {
-                    //await EditAsync();
+                    await EditAsync();
                 }
                 else
                 {
@@ -118,9 +156,38 @@ namespace BinManager.Views
                 Save.Text = "Save";
                 viewModel.Edit = true;
                 //enable stacks
+                SetGeneralPage();
+                SetCapcityPage();
                 //add cancel button
             }
-        }        
+        }
+
+        private async Task EditAsync()
+        {
+            var response = await ArcGisService.EditBin(viewModel);
+
+            switch (response)
+            {
+                case ArcCrudEnum.Success:
+                    await DisplayAlert("", "Bin successfully edited", "Ok");
+                    //activityIndicator_edit.Off();
+                    viewModel.New = false;
+                    viewModel.Edit = false;
+                    Save.Text = "Edit";
+                    //disable stacks
+                    SetGeneralPage();
+                    SetCapcityPage();
+                    break;
+                case ArcCrudEnum.Failure:
+                    await DisplayAlert("Error", "Error occurred", "Ok");
+                    //activityIndicator_edit.Off();
+                    break;
+                case ArcCrudEnum.Exception:
+                    await DisplayAlert("Error", "Failed to connect to online services. Please try again", "Ok");
+                    //activityIndicator_edit.Off();
+                    break;
+            }
+        }
 
         private async Task SaveAsync()
         {
@@ -134,6 +201,8 @@ namespace BinManager.Views
                     viewModel.New = false;
                     viewModel.Edit = false;
                     Save.Text = "Edit";
+                    //disable stacks
+                    SetGeneralPage();
                     SetCapcityPage();
                     break;
                 case ArcCrudEnum.Failure:
@@ -378,6 +447,31 @@ namespace BinManager.Views
         }
         #endregion
 
+        #region Set General Page
+        private void SetGeneralPage()
+        {
+            if (viewModel.New || viewModel.Edit)
+            {
+                GeneralStack.IsEnabled = true;
+                if (viewModel.Edit)
+                {
+                    CreatedByLabel.IsVisible = true;
+                    CreatedByLabel.IsEnabled = false;
+                    CreatedBy.IsVisible = true;
+                    CreatedBy.IsEnabled = false;
+                    ModifiedByLabel.IsVisible = true;
+                    ModifiedByLabel.IsEnabled = false;
+                    ModifiedBy.IsVisible = true;
+                    ModifiedBy.IsEnabled = false;
+                }
+            }
+            else
+            {
+                GeneralStack.IsEnabled = false;
+            }
+        }
+        #endregion
+
         #region SetContents Page
         private void SetContentsPage()
         {
@@ -503,6 +597,10 @@ namespace BinManager.Views
             {
                 PolygonStack.IsEnabled = true;
             }
+            else
+            {
+                PolygonStack.IsEnabled = false;
+            }
 
             FlatStack.IsEnabled = false;
             FlatStack.IsVisible = false;
@@ -524,6 +622,10 @@ namespace BinManager.Views
             if (viewModel.New || viewModel.Edit)
             {
                 GravityStack.IsEnabled = true;
+            }
+            else
+            {
+                GravityStack.IsEnabled = false;
             }
 
             FlatStack.IsEnabled = false;
@@ -547,6 +649,10 @@ namespace BinManager.Views
             {
                 RoundStack.IsEnabled = true;
             }
+            else
+            {
+                RoundStack.IsEnabled = false;
+            }
 
             FlatStack.IsEnabled = false;
             FlatStack.IsVisible = false;
@@ -568,6 +674,10 @@ namespace BinManager.Views
             if (viewModel.New || viewModel.Edit)
             {
                 FlatStack.IsEnabled = true;
+            }
+            else
+            {
+                FlatStack.IsEnabled = false;
             }
 
             GravityStack.IsEnabled = false;
@@ -614,7 +724,7 @@ namespace BinManager.Views
                 default:
                     break;
             }
-
+                        
             SetCapcityPage();
             //SetContentsPage();
 
@@ -642,27 +752,27 @@ namespace BinManager.Views
 
         private async void SetImage()
         {
-            //await viewModel.ArcGISFeature.LoadAsync();
+            await viewModel.ArcGISFeature.LoadAsync();
 
-            //var attachments = await viewModel.ArcGISFeature.GetAttachmentsAsync();
+            var attachments = await viewModel.ArcGISFeature.GetAttachmentsAsync();
 
-            //foreach (var attach in attachments)
-            //{
-            //    if (attach.ContentType.Contains(@"image/"))
-            //    {
-            //        using (var stream = await attach.GetDataAsync())
-            //        {
-            //            using (var memoryStream = new MemoryStream())
-            //            {
-            //                stream.CopyTo(memoryStream);
-            //                var asByte = memoryStream.ToArray();
+            foreach (var attach in attachments)
+            {
+                if (attach.ContentType.Contains(@"image/"))
+                {
+                    using (var stream = await attach.GetDataAsync())
+                    {
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            stream.CopyTo(memoryStream);
+                            var asByte = memoryStream.ToArray();
 
-            //                BinPic.Source = ImageSource.FromStream(() => new MemoryStream(asByte));
-            //                BinPicFrame.IsVisible = true;
-            //            }
-            //        }
-            //    }
-            //}
+                            BinPic.Source = ImageSource.FromStream(() => new MemoryStream(asByte));
+                            BinPicFrame.IsVisible = true;
+                        }
+                    }
+                }
+            }
 
         }
 

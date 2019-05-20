@@ -50,6 +50,7 @@ namespace BinManager.Views
         public MapPage()
         {
             InitializeComponent();
+            
             _featureTable = new ServiceFeatureTable(new Uri(ArcGisService.FeatureServiceUrl));
             _featureLayer = new FeatureLayer(_featureTable);
             choice.SelectedIndex = 0;
