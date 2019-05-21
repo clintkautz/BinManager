@@ -16,6 +16,9 @@ namespace BinManager.Views
     using Xamarin.Forms.Xaml;
     using Plugin.Media.Abstractions;
     using BinManager.Utilities.Mappers;
+    using Xamarin.Essentials;
+    using cam = Plugin.Media.CrossMedia;
+    using Plugin.Media;
     #endregion
 
     [XamlCompilation(XamlCompilationOptions.Compile)]
@@ -36,7 +39,12 @@ namespace BinManager.Views
         {
             InitializeComponent();
             
-            BindingContext = viewModel = new BinViewModel();           
+            BindingContext = viewModel = new BinViewModel();
+
+            if (DeviceInfo.DeviceType == DeviceType.Physical)
+            {
+                TakePhotoAsync();
+            }
 
             YearCollected.Text = DateTime.Now.ToString("yyyy");
             YearCollected.IsEnabled = false;
@@ -60,7 +68,8 @@ namespace BinManager.Views
             //SetCropYear();
 
 
-        }
+        }        
+
         //Add New Bin (photo)
         public BinPage(MediaFile photo)
         {
@@ -74,6 +83,7 @@ namespace BinManager.Views
 
             BinPicFrame.IsVisible = false;
             BinPic.Source = ImageSource.FromStream(() => photo.GetStream());
+            viewModel.Binstance.Image = photo;
             BinPicFrame.IsVisible = true;
 
             CreatedByLabel.IsVisible = false;
@@ -123,6 +133,10 @@ namespace BinManager.Views
         {
             activityIndicator_save.On();
             activityIndicatorCapacity_save.On();
+            Save.IsEnabled = false;
+            GeneralStack.IsEnabled = false;
+            CapcaityStack.IsEnabled = false;
+
             if (viewModel.New)
             {
                 RemoveErrors();
@@ -130,15 +144,14 @@ namespace BinManager.Views
                 if (await LocationEnabledAsync())
                 {
                     if (await viewModel.ValdiateAsync())
-                    {
-                        GeneralStack.IsEnabled = false;
-                        CapcaityStack.IsEnabled = false;
+                    {                        
                         await SaveAsync();
                     }
                     else
                     {
                         activityIndicator_save.Off();
                         activityIndicatorCapacity_save.Off();
+                        Save.IsEnabled = true;
                         await DisplayErrorsAsync();
                     }
                 }
@@ -146,16 +159,17 @@ namespace BinManager.Views
             else if (viewModel.Edit)
             {
                 RemoveErrors();
+                Cancel.IsEnabled = false;
                 if (await viewModel.ValdiateAsync())
                 {
-                    GeneralStack.IsEnabled = false;
-                    CapcaityStack.IsEnabled = false;
                     await EditAsync();
                 }
                 else
                 {
                     activityIndicator_save.Off();
                     activityIndicatorCapacity_save.Off();
+                    Save.IsEnabled = true;
+                    Cancel.IsEnabled = true;
                     await DisplayErrorsAsync();
                 }
             }
@@ -169,7 +183,8 @@ namespace BinManager.Views
                 //enable stacks
                 SetGeneralPage();
                 SetCapcityPage();
-                //add cancel button
+                Save.IsEnabled = true;
+                Cancel.IsEnabled = true;
             }
         }
 
@@ -466,6 +481,10 @@ namespace BinManager.Views
             }
 
             await DisplayAlert("Notice!", "Please enter required values in red", "Ok");
+
+            SetGeneralPage();
+            SetCapcityPage();
+
         }
         #endregion
 
@@ -815,6 +834,45 @@ namespace BinManager.Views
             HasHopperLabel.IsVisible = false;
             HasHopper.IsEnabled = false;
             HasHopper.IsVisible = false;
+        }
+
+        private async Task TakePhotoAsync()
+        {
+            var cameraStatus = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Camera);
+
+            if (cameraStatus == PermissionStatus.Denied
+                || cameraStatus == PermissionStatus.Disabled
+                || cameraStatus == PermissionStatus.Restricted)
+            {
+                Device.OpenUri(new Uri("app-settings:"));
+                return;
+            }
+
+            // Take photo, used in creating new entry. Metadata taken from here
+            await cam.Current.Initialize();
+            var photo = await CrossMedia.Current.TakePhotoAsync(new camOptions.StoreCameraMediaOptions
+            {
+                SaveToAlbum = true,
+                Name = "binPic.png"
+            });
+
+            if (photo != null)
+            {
+                viewModel.Binstance.Image = photo;
+                BinPic.Source = ImageSource.FromStream(() => photo.GetStream());
+                BinPicFrame.IsVisible = true;
+            }
+            else
+            {
+                await DisplayAlert("Error", "Photo is required", "Ok");
+
+                await TakePhotoAsync();
+
+                //else
+                //{
+                //    Navigation.PopToRootAsync();
+                //}
+            }
         }
 
         #endregion
