@@ -1,11 +1,12 @@
-﻿using BinManager.Models;
-using BinManager.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 namespace BinManager.Utilities.Mappers
 {
+    #region imports
+    using BinManager.Models;
+    using BinManager.ViewModels;
+    using System;
+    #endregion
+
     public static class BinViewModelMapper
     {
         public static IBinstance MapToBin(this BinViewModel inViewModel)
@@ -283,6 +284,144 @@ namespace BinManager.Utilities.Mappers
             }
 
             return rbin;
+        }
+
+        public static void MapBinstanceToViewModel(this BinViewModel inViewModel)
+        {
+            IBinstance oldBin = inViewModel.Binstance;
+
+            inViewModel.Identifier = oldBin.Identifier;
+
+            switch (oldBin.BinType)
+            {
+                case Enums.BinTypeEnum.FlatStructure:
+                    inViewModel.BinType = 0;
+                    inViewModel.FlatBinstanceToViewModel();
+                    break;
+                case Enums.BinTypeEnum.GravityWagon:
+                    inViewModel.BinType = 1;
+                    inViewModel.GravityBinstanceToViewModel();
+                    break;
+                case Enums.BinTypeEnum.PolygonStructure:
+                    inViewModel.BinType = 2;
+                    inViewModel.PolyBinstanceToViewModel();
+                    break;
+                case Enums.BinTypeEnum.RoundStorage:
+                    inViewModel.BinType = 3;
+                    inViewModel.RoundBinstanceToViewModel();
+                    break;
+                case Enums.BinTypeEnum.NotFound:
+                    inViewModel.BinType = -1;
+                    break;
+            }
+
+            switch (oldBin.IsLeased)
+            {
+                case true:
+                    inViewModel.Owned = 0;
+                    break;
+                case false:
+                    inViewModel.Owned = 1;
+                    break;
+                case null:
+                    inViewModel.Owned = -1;
+                    break;
+            }
+
+            switch (oldBin.HasDryingDevice)
+            {
+                case true:
+                    inViewModel.HasDryingDevice = 0;
+                    break;
+                case false:
+                    inViewModel.HasDryingDevice = 1;
+                    break;
+                case null:
+                    inViewModel.HasDryingDevice = -1;
+                    break;
+            }
+
+            switch (oldBin.HasGrainHeightIndicator)
+            {
+                case true:
+                    inViewModel.HasGrainHeightIndicator = 0;
+                    break;
+                case false:
+                    inViewModel.HasGrainHeightIndicator = 1;
+                    break;
+                case null:
+                    inViewModel.HasGrainHeightIndicator = -1;
+                    break;
+            }
+
+            switch (oldBin.LadderType)
+            {
+                case Enums.Ladder.None:
+                    inViewModel.LadderType = 0;
+                    break;
+                case Enums.Ladder.Stairs:
+                    inViewModel.LadderType = 1;
+                    break;
+                case Enums.Ladder.Ladder:
+                    inViewModel.LadderType = 2;
+                    break;
+                default:
+                    inViewModel.LadderType = -1;
+                    break;
+            }
+
+            inViewModel.Notes = oldBin.Notes;
+
+        }
+
+        private static void RoundBinstanceToViewModel(this BinViewModel inViewModel)
+        {
+            RoundBin round = (RoundBin)inViewModel.Binstance;
+            if (round.HasHopper.HasValue)
+            {
+                switch (round.HasHopper)
+                {
+                    case true:
+                        inViewModel.HasHopper = 0;
+                        break;
+                    case false:
+                        inViewModel.HasHopper = 1;
+                        break;
+                    case null:
+                        inViewModel.HasHopper = -1;
+                        break;
+                }
+                
+            }
+            inViewModel.Radius = round.Radius.ToString();
+            inViewModel.WallHeight = round.WallHeight.ToString();
+            inViewModel.RoofHeight = round.RoofHeight.ToString();
+            inViewModel.HopperHeight = round.HopperHeight.ToString();
+        }
+
+        private static void PolyBinstanceToViewModel(this BinViewModel inViewModel)
+        {
+            PolygonBin polygonBin = (PolygonBin)inViewModel.Binstance;
+            inViewModel.SideHeight = polygonBin.SideHeight.ToString();
+            inViewModel.SideWidth = polygonBin.SideWidth.ToString();
+            inViewModel.NumberOfSides = polygonBin.NumberOfSides.ToString();
+        }
+
+        private static void GravityBinstanceToViewModel(this BinViewModel inViewModel)
+        {
+            GravityBin gravityBin = (GravityBin)inViewModel.Binstance;
+            inViewModel.ChuteLength = gravityBin.ChuteLength.ToString();
+            inViewModel.HopperHeight = gravityBin.HopperHeight.ToString();
+            inViewModel.RectangleHeight = gravityBin.RectangleHeight.ToString();
+            inViewModel.RectangleLength = gravityBin.RectangleLength.ToString();
+            inViewModel.RectangleWidth = gravityBin.RectangleWidth.ToString();
+        }
+
+        private static void FlatBinstanceToViewModel(this BinViewModel inViewModel)
+        {
+            FlatBin flat = (FlatBin)inViewModel.Binstance;
+            inViewModel.CribLength = flat.CribLength.ToString();
+            inViewModel.CribWidth = flat.CribWidth.ToString();
         }
 
         public static YTYData MapViewModelToYTY(this BinViewModel inViewModel)

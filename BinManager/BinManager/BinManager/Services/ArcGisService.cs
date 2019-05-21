@@ -1,29 +1,29 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Esri.ArcGISRuntime.Security;
-using Esri.ArcGISRuntime.Http;
-using System.Collections.Generic;
-using Esri.ArcGISRuntime.Data;
-using Esri.ArcGISRuntime.Geometry;
-using Esri.ArcGISRuntime.Mapping;
-using Newtonsoft.Json;
-using System.Text;
-using BinManager.Utilities.Enums;
-using BinManager.Settings;
-using BinManager.Models;
-using BinManager.Utilities;
-using BinManager.ViewModels;
-using Xamarin.Forms;
-using System.IO;
-using BinManager.Views;
-using Plugin.Geolocator;
-using Xamarin.Essentials;
-
+﻿
 namespace BinManager
 {
+    #region imports
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Esri.ArcGISRuntime.Security;
+    using Esri.ArcGISRuntime.Http;
+    using System.Collections.Generic;
+    using Esri.ArcGISRuntime.Data;
+    using Esri.ArcGISRuntime.Geometry;
+    using Esri.ArcGISRuntime.Mapping;
+    using Newtonsoft.Json;
+    using System.Text;
+    using BinManager.Utilities.Enums;
+    using BinManager.Models;
+    using BinManager.ViewModels;
+    using System.IO;
+    using Plugin.Geolocator;
+    using Xamarin.Essentials;
+    #endregion
+
     public static class ArcGisService
-    {        
+    {
+        #region constants
         public static readonly string YTY_FILE_NAME = "YTY.json";
 
         public static string AuthenticateUrl = "https://www.arcgis.com/sharing/test";
@@ -34,6 +34,8 @@ namespace BinManager
 
         private static ServiceFeatureTable _featureTable;
         private static FeatureLayer _featureLayer;
+
+        #endregion
 
         static ArcGisService()
         {
@@ -163,12 +165,7 @@ namespace BinManager
                 }               
 
                 attributes.Add("notes", bin.Notes);
-
-                double dr;
-
-                //double.TryParse(bin.BinVolume, out dr);
-                //attributes.Add("bin_volume", dr);
-
+                                
                 //bin type specific logic below
                 Type t = bin.GetType();
                 if (bin.BinType == BinTypeEnum.FlatStructure)
@@ -330,7 +327,7 @@ namespace BinManager
         }
         #endregion
 
-        
+        #region Edit Bin
         public static async Task<ArcCrudEnum> EditBin(BinViewModel binViewModel)
         {
             IBinstance bin = binViewModel.Binstance;
@@ -518,155 +515,37 @@ namespace BinManager
                 return ArcCrudEnum.Exception; 
             }
         }
-        /*
-                public static async Task<ArcCrudEnum> DeleteBin(ArcGISFeature featureToDelete)
+
+        #endregion
+
+        #region Delete Bin
+        public static async Task<ArcCrudEnum> DeleteBin(ArcGISFeature featureToDelete)
+        {
+            try
+            {
+                await _featureTable.DeleteFeatureAsync(featureToDelete);
+
+                // push to ArcGIS Online feature service
+                IReadOnlyList<EditResult> editResults = await _featureTable.ApplyEditsAsync();
+
+                foreach (var er in editResults)
                 {
-                    try
+                    if (er.CompletedWithErrors)
                     {
-                        await _featureTable.DeleteFeatureAsync(featureToDelete);
-
-                        // push to ArcGIS Online feature service
-                        IReadOnlyList<EditResult> editResults = await _featureTable.ApplyEditsAsync();
-
-                        foreach (var er in editResults)
-                        {
-                            if (er.CompletedWithErrors)
-                            {
-                                // handle error (er.Error.Message)
-                                return ArcCrudEnum.Failure;
-                            }
-                        }
-
-                        return ArcCrudEnum.Success;
-                    }
-                    catch (ArcGISWebException)
-                    {
-                        return ArcCrudEnum.Exception;
+                        // handle error (er.Error.Message)
+                        return ArcCrudEnum.Failure;
                     }
                 }
-        */
-        //public static async Task<ArcCrudEnum> PushYTYToArc(IBinViewModel binViewModel)
-        //{
-        //    //ArcGISFeature agsFeature = binViewModel.ArcGISFeature;
-        //    // load
-        //    await binViewModel.ArcGISFeature.LoadAsync();
 
-        //    try
-        //    {
-        //        /*-------- Dealing With Data --------*/
-        //        //can't be null
-        //        if(binViewModel.BaseBin.YTYDatas == null)
-        //        {
-        //            binViewModel.BaseBin.YTYDatas = new List<YTYData>();
-        //        }
-        //        //use data in binViewModel
+                return ArcCrudEnum.Success;
+            }
+            catch (ArcGISWebException)
+            {
+                return ArcCrudEnum.Exception;
+            }
+        }
 
+        #endregion
 
-        //        /*-------- Formatting --------*/
-        //        //create json
-        //        string jsonString = JsonConvert.SerializeObject(binViewModel.BaseBin.YTYDatas);
-        //        // convert json to byte array
-        //        byte[] byteArray = Encoding.UTF8.GetBytes(jsonString);
-
-
-        //        /*-------- ARC Connection --------*/
-        //        //remove old YTYData
-        //        List<Attachment> attachmentsToRemove = new List<Attachment>();
-        //        IReadOnlyList<Attachment> attachments = await binViewModel.ArcGISFeature.GetAttachmentsAsync();
-        //        foreach (Attachment attachment in attachments)
-        //        {
-        //            if (attachment.Name.Equals(YTY_FILE_NAME))
-        //            {
-        //                attachmentsToRemove.Add(attachment);
-        //            }
-        //        }
-        //        await binViewModel.ArcGISFeature.DeleteAttachmentsAsync(attachmentsToRemove);
-        //        // add json as an attachment - pass the name, mime type, and attachment data (bytes, etc.)
-        //        await binViewModel.ArcGISFeature.AddAttachmentAsync(YTY_FILE_NAME, "application/json", byteArray); //agsFeature
-
-        //        // update feature after attachment added
-        //        //await _featureTable.UpdateFeatureAsync(agsFeature);
-
-        //        // push to ArcGIS Online feature service
-        //        IReadOnlyList<EditResult> editResults = await _featureTable.ApplyEditsAsync();
-
-        //        // check results for errors
-        //        foreach (var er in editResults)
-        //        {
-        //            if (er.CompletedWithErrors)
-        //            {
-        //                // handle error (er.Error.Message)
-        //                return ArcCrudEnum.Failure;
-        //            }
-        //        }
-
-        //        return ArcCrudEnum.Success;
-        //    }
-        //    catch (ArcGISWebException)
-        //    {
-        //        return ArcCrudEnum.Exception;
-        //    }
-        //}
-
-        //public static async Task<ArcCrudEnum> PullYTYFromArc(IBinViewModel binViewModel)
-        //{
-        //    // load
-        //    await binViewModel.ArcGISFeature.LoadAsync();
-
-        //    try
-        //    {
-        //        IReadOnlyList<Attachment> attachments = await binViewModel.ArcGISFeature.GetAttachmentsAsync();
-        //        foreach (Attachment attachment in attachments)
-        //        {
-        //            if (attachment.Name.Equals(YTY_FILE_NAME))
-        //            {
-        //                //attachment is the yty json data file
-
-        //                /*-------- Formatting --------*/
-        //                Stream jsonStream = await attachment.GetDataAsync();
-        //                StreamReader streamReader = new StreamReader(jsonStream);
-        //                string jsonString = streamReader.ReadToEnd();
-
-        //                /*-------- Update Data --------*/
-        //                binViewModel.BaseBin.YTYDatas.Clear();
-        //                binViewModel.BaseBin.YTYDatas.AddRange((List<YTYData>)JsonConvert.DeserializeObject(jsonString));
-
-        //                //should only be one yty json file
-        //                break;
-        //            }
-        //        }
-        //        return ArcCrudEnum.Success;
-
-        //    } catch (Exception)
-        //    {
-        //        return ArcCrudEnum.Exception;
-        //    }
-        //}
-
-        //public static Task<ArcCrudEnum> AddYtyRecord(IBinViewModel binViewModel, YTYData yTYData)
-        //{
-        //    ArcGISFeature agsFeature = binViewModel.ArcGISFeature;
-
-        //    /*-------- Dealing With Data --------*/
-        //    binViewModel.BaseBin.YTYDatas.Add(yTYData);
-
-        //    return PushYTYToArc(binViewModel);
-        //}
-
-        //public static Task<ArcCrudEnum> EditYtyRecord(IBinViewModel binViewModel, YTYData newYTYData, int oldYTYDataIndex)
-        //{
-        //    /*-------- Dealing With Data --------*/
-        //    binViewModel.BaseBin.YTYDatas[oldYTYDataIndex] = newYTYData;
-
-        //    return PushYTYToArc(binViewModel);
-        //}
-
-        //public static Task<ArcCrudEnum> DeleteYtyRecord(IBinViewModel binViewModel, YTYData dataToRemove)
-        //{
-        //    /*-------- Dealing With Data --------*/
-        //    binViewModel.BaseBin.YTYDatas.Remove(dataToRemove);
-
-        //    return PushYTYToArc(binViewModel);
-        //}
     }
 }

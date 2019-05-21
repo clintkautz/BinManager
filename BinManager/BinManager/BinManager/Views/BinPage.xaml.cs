@@ -1,25 +1,21 @@
-﻿using BinManager.Models;
-using BinManager.Utilities.Enums;
-using BinManager.Utilities;
-using BinManager.ViewModels;
-using Esri.ArcGISRuntime.Data;
-using Newtonsoft.Json;
-using Plugin.Permissions;
-using Plugin.Permissions.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-using Plugin.Media.Abstractions;
-
+﻿
 namespace BinManager.Views
 {
     #region imports
+    using BinManager.Utilities.Enums;
+    using BinManager.Utilities.Extensions;
+    using BinManager.ViewModels;
+    using Esri.ArcGISRuntime.Data;
+    using Plugin.Permissions;
+    using Plugin.Permissions.Abstractions;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Threading.Tasks;
+    using Xamarin.Forms;
+    using Xamarin.Forms.Xaml;
+    using Plugin.Media.Abstractions;
+    using BinManager.Utilities.Mappers;
     #endregion
 
     [XamlCompilation(XamlCompilationOptions.Compile)]
@@ -39,7 +35,7 @@ namespace BinManager.Views
         public BinPage()
         {
             InitializeComponent();
-
+            
             BindingContext = viewModel = new BinViewModel();           
 
             YearCollected.Text = DateTime.Now.ToString("yyyy");
@@ -58,10 +54,11 @@ namespace BinManager.Views
 
             HasHopperHopperDisable();
             HideCapacityFields();
+            HideContentsFields();
 
             //CropYear.ItemsSource = viewModel.DateRange;
             //SetCropYear();
-            //HideContentsFields();
+
 
         }
         //Add New Bin (photo)
@@ -69,8 +66,8 @@ namespace BinManager.Views
         {
             InitializeComponent();
 
-            BindingContext = viewModel = new BinViewModel();           
-
+            BindingContext = viewModel = new BinViewModel();
+            Cancel.IsEnabled = false;
             YearCollected.Text = DateTime.Now.ToString("yyyy");
             YearCollected.IsEnabled = false;
             viewModel.Binstance.YearCollected = YearCollected.Text;
@@ -90,10 +87,10 @@ namespace BinManager.Views
 
             HasHopperHopperDisable();
             HideCapacityFields();
+            HideContentsFields();
 
             //CropYear.ItemsSource = viewModel.DateRange;
             //SetCropYear();
-            //HideContentsFields();
 
         }
 
@@ -103,7 +100,8 @@ namespace BinManager.Views
             InitializeComponent();
 
             BindingContext = viewModel = new BinViewModel(feature);
-                       
+            Cancel.IsEnabled = true;
+            Cancel.Text = "Delete";
             Save.Text = "Edit";
 
             BinPicFrame.IsVisible = false;
@@ -123,6 +121,8 @@ namespace BinManager.Views
         #region Save
         private async void Save_Clicked(object sender, EventArgs e)
         {
+            activityIndicator_save.On();
+            activityIndicatorCapacity_save.On();
             if (viewModel.New)
             {
                 RemoveErrors();
@@ -131,11 +131,15 @@ namespace BinManager.Views
                 {
                     if (await viewModel.ValdiateAsync())
                     {
+                        GeneralStack.IsEnabled = false;
+                        CapcaityStack.IsEnabled = false;
                         await SaveAsync();
                     }
                     else
                     {
-                        DisplayErrors();
+                        activityIndicator_save.Off();
+                        activityIndicatorCapacity_save.Off();
+                        await DisplayErrorsAsync();
                     }
                 }
             }
@@ -144,17 +148,24 @@ namespace BinManager.Views
                 RemoveErrors();
                 if (await viewModel.ValdiateAsync())
                 {
+                    GeneralStack.IsEnabled = false;
+                    CapcaityStack.IsEnabled = false;
                     await EditAsync();
                 }
                 else
                 {
-                    DisplayErrors();
+                    activityIndicator_save.Off();
+                    activityIndicatorCapacity_save.Off();
+                    await DisplayErrorsAsync();
                 }
             }
             else
             {//Edit Clicked for the first time since last save
-                Save.Text = "Save";
+                activityIndicator_save.Off();
+                activityIndicatorCapacity_save.Off();
                 viewModel.Edit = true;
+                Save.Text = "Save";
+                Cancel.Text = "Cancel";                
                 //enable stacks
                 SetGeneralPage();
                 SetCapcityPage();
@@ -170,21 +181,25 @@ namespace BinManager.Views
             {
                 case ArcCrudEnum.Success:
                     await DisplayAlert("", "Bin successfully edited", "Ok");
-                    //activityIndicator_edit.Off();
+                    activityIndicator_save.Off();
+                    activityIndicatorCapacity_save.Off();
                     viewModel.New = false;
                     viewModel.Edit = false;
                     Save.Text = "Edit";
+                    Cancel.Text = "Delete";
                     //disable stacks
                     SetGeneralPage();
                     SetCapcityPage();
                     break;
                 case ArcCrudEnum.Failure:
                     await DisplayAlert("Error", "Error occurred", "Ok");
-                    //activityIndicator_edit.Off();
+                    activityIndicator_save.Off();
+                    activityIndicatorCapacity_save.Off();
                     break;
                 case ArcCrudEnum.Exception:
                     await DisplayAlert("Error", "Failed to connect to online services. Please try again", "Ok");
-                    //activityIndicator_edit.Off();
+                    activityIndicatorCapacity_save.Off();
+                    activityIndicator_save.Off();
                     break;
             }
         }
@@ -196,22 +211,27 @@ namespace BinManager.Views
             switch (addResult)
             {
                 case ArcCrudEnum.Success:
-                    //activityIndicator_process.Off();
                     await DisplayAlert("Success!", "New bin successfully added", "Ok");
+                    activityIndicator_save.Off();
+                    activityIndicatorCapacity_save.Off();
                     viewModel.New = false;
                     viewModel.Edit = false;
                     Save.Text = "Edit";
+                    Cancel.Text = "Delete";
+                    Cancel.IsEnabled = true;
                     //disable stacks
                     SetGeneralPage();
                     SetCapcityPage();
                     break;
                 case ArcCrudEnum.Failure:
-                    //activityIndicator_process.Off();
                     await DisplayAlert("Error", "Error occurred, try again", "Ok");
+                    activityIndicator_save.Off();
+                    activityIndicatorCapacity_save.Off();
                     break;
                 case ArcCrudEnum.Exception:
-                    //activityIndicator_process.Off();
                     await DisplayAlert("Error", "Failed to connect to online services. Please try again", "Ok");
+                    activityIndicator_save.Off();
+                    activityIndicatorCapacity_save.Off();
                     break;
             }
         }
@@ -336,8 +356,8 @@ namespace BinManager.Views
             return dictionary;
         }
 
-        private void DisplayErrors()
-        {
+        private async Task DisplayErrorsAsync()
+        {          
             foreach (var key in viewModel.Errors.Keys)
             {
                 switch (key)
@@ -442,9 +462,60 @@ namespace BinManager.Views
                         //    GrainHopperHeightLabel.Text = viewModel.Errors[21];
                         //    GrainHopperHeightLabel.TextColor = Color.Red;
                         //    break;
+                }                
+            }
+
+            await DisplayAlert("Notice!", "Please enter required values in red", "Ok");
+        }
+        #endregion
+
+        #region Cancel
+
+        private void Cancel_Clicked(object sender, EventArgs e)
+        {
+            if (viewModel.Edit && !viewModel.New)
+            {//cancel edit
+                Cancel.Text = "Delete";
+                Save.Text = "Edit";
+                RemoveErrors();
+                viewModel.Edit = false;
+                viewModel.Binstance = viewModel.ArcGISFeature.MapToBin();
+                viewModel.FeatureMapBinType();
+                viewModel.MapBinstanceToViewModel();
+            }
+            else if (!viewModel.New)
+            {//delete
+                HandleDelete();
+            }
+        }
+
+        private async void HandleDelete()
+        {
+            var confirm = await DisplayAlert("Delete", "Are you sure you want to delete this bin record?", "No", "Yes");
+
+            if (!confirm)
+            {
+                var response = await ArcGisService.DeleteBin(viewModel.ArcGISFeature);
+
+                switch (response)
+                {
+                    case ArcCrudEnum.Success:
+                        await DisplayAlert("", "Bin successfully deleted", "Ok");
+                        //activityIndicator_edit.Off();
+                        await Navigation.PopToRootAsync();
+                        break;
+                    case ArcCrudEnum.Failure:
+                        await DisplayAlert("Error", "Error occurred", "Ok");
+                        //activityIndicator_edit.Off();
+                        break;
+                    case ArcCrudEnum.Exception:
+                        await DisplayAlert("Error", "Failed to connect to online services. Please try again", "Ok");
+                        //activityIndicator_edit.Off();
+                        break;
                 }
             }
         }
+
         #endregion
 
         #region Set General Page
@@ -475,87 +546,87 @@ namespace BinManager.Views
         #region SetContents Page
         private void SetContentsPage()
         {
-            //ContentsLabel.TextColor = Color.Black;
+            ContentsLabel.TextColor = Color.Black;
 
-            //VolumeLabel.IsEnabled = true;
-            //VolumeLabel.IsVisible = true;
+            VolumeLabel.IsEnabled = true;
+            VolumeLabel.IsVisible = true;
 
-            //ContentStack.IsVisible = true;
-            //ContentStack.IsEnabled = true;
+            ContentStack.IsVisible = true;
+            ContentStack.IsEnabled = true;
 
-            //switch (viewModel.BinType)
-            //{
-            //    case -1:
-            //        HideContentsFields();
-            //        break;
-            //    case 0:
-            //        SetFlatContents();
-            //        break;                
-            //    case 1:
-            //        SetGravityContents();
-            //        break;
-            //    case 2:
-            //        SetPolygonContents();
-            //        break;
-            //    case 3:
-            //        SetRoundContents();
-            //        break;
-            //    default:
-            //        HideContentsFields();
-            //        break;
-            //}
+            switch (viewModel.BinType)
+            {
+                case -1:
+                    HideContentsFields();
+                    break;
+                case 0:
+                    SetFlatContents();
+                    break;
+                case 1:
+                    SetGravityContents();
+                    break;
+                case 2:
+                    SetPolygonContents();
+                    break;
+                case 3:
+                    SetRoundContents();
+                    break;
+                default:
+                    HideContentsFields();
+                    break;
+            }
 
             //SetCropYear();
         }
 
-        //private void SetPolygonContents()
-        //{
-        //    ContentsLabel.Text = "Enter Polygon Bin Contents";
-        //    GrainHopperHeightLabel.IsVisible = false;
-        //    GrainHopperHeightLabel.IsEnabled = false;
-        //    GrainHopperHeight.IsVisible = false;
-        //    GrainHopperHeight.IsEnabled = false;
-        //}
+        private void SetPolygonContents()
+        {
+            ContentsLabel.Text = "Enter Polygon Bin Contents";
+            GrainHopperHeightLabel.IsVisible = false;
+            GrainHopperHeightLabel.IsEnabled = false;
+            GrainHopperHeight.IsVisible = false;
+            GrainHopperHeight.IsEnabled = false;
+        }
 
-        //private void SetGravityContents()
-        //{
-        //    ContentsLabel.Text = "Enter Gravity Bin Contents";
-        //    GrainHopperHeightLabel.IsVisible = true;
-        //    GrainHopperHeightLabel.IsEnabled = true;
-        //    GrainHopperHeight.IsVisible = true;
-        //    GrainHopperHeight.IsEnabled = true;
-        //}
+        private void SetGravityContents()
+        {
+            ContentsLabel.Text = "Enter Gravity Bin Contents";
+            GrainHopperHeightLabel.IsVisible = true;
+            GrainHopperHeightLabel.IsEnabled = true;
+            GrainHopperHeight.IsVisible = true;
+            GrainHopperHeight.IsEnabled = true;
+        }
 
-        //private void SetRoundContents()
-        //{
-        //    ContentsLabel.Text = "Enter Round Bin Contents";
-        //    GrainHopperHeightLabel.IsVisible = true;
-        //    GrainHopperHeightLabel.IsEnabled = true;
-        //    GrainHopperHeight.IsVisible = true;
-        //    GrainHopperHeight.IsEnabled = true;
-        //}
+        private void SetRoundContents()
+        {
+            ContentsLabel.Text = "Enter Round Bin Contents";
+            GrainHopperHeightLabel.IsVisible = true;
+            GrainHopperHeightLabel.IsEnabled = true;
+            GrainHopperHeight.IsVisible = true;
+            GrainHopperHeight.IsEnabled = true;
+        }
 
-        //private void SetFlatContents()
-        //{
-        //    ContentsLabel.Text = "Enter Flat Bin Contents";
-        //    GrainHopperHeightLabel.IsVisible = false;
-        //    GrainHopperHeightLabel.IsEnabled = false;
-        //    GrainHopperHeight.IsVisible = false;
-        //    GrainHopperHeight.IsEnabled = false;
-        //}
+        private void SetFlatContents()
+        {
+            ContentsLabel.Text = "Enter Flat Bin Contents";
+            GrainHopperHeightLabel.IsVisible = false;
+            GrainHopperHeightLabel.IsEnabled = false;
+            GrainHopperHeight.IsVisible = false;
+            GrainHopperHeight.IsEnabled = false;
+        }
 
-        //private void HideContentsFields()
-        //{
-        //    ContentsLabel.Text = "Bin Type is required";
-        //    ContentsLabel.TextColor = Color.Red;
+        private void HideContentsFields()
+        {
+            ContentsLabel.Text = "Bin Type is required";
+            ContentsLabel.TextColor = Color.Red;
 
-        //    VolumeLabel.IsEnabled = false;
-        //    VolumeLabel.IsVisible = false;
+            VolumeLabel.IsEnabled = false;
+            VolumeLabel.IsVisible = false;
 
-        //    ContentStack.IsVisible = false;
-        //    ContentStack.IsEnabled = false;
+            ContentStack.IsVisible = false;
+            ContentStack.IsEnabled = false;
 
-        //}
+        }
 
 
         #endregion
@@ -726,7 +797,7 @@ namespace BinManager.Views
             }
                         
             SetCapcityPage();
-            //SetContentsPage();
+            SetContentsPage();
 
         }
 
@@ -853,7 +924,8 @@ namespace BinManager.Views
                     
             //    }
             //}
-        }                            
+        }
+
 
         //private void GrainConeHeight_Changed(object sender, TextChangedEventArgs e)
         //{

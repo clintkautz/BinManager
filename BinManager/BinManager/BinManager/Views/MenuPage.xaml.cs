@@ -19,8 +19,8 @@ namespace BinManager.Views
             menuItems = new List<HomeMenuItem>
             {
                 new HomeMenuItem {Id = MenuItemType.MainMenu, Title="Main Menu" },
-                new HomeMenuItem {Id = MenuItemType.NewBin, Title="Add New Bin" },
-                new HomeMenuItem {Id = MenuItemType.Map, Title="View Map" }
+                new HomeMenuItem {Id = MenuItemType.NewBin, Title="New Bin" },
+                new HomeMenuItem {Id = MenuItemType.Map, Title="Map" }
             };
 
             ListViewMenu.ItemsSource = menuItems;

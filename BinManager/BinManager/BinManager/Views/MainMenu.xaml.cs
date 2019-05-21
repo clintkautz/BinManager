@@ -1,20 +1,19 @@
-﻿using Plugin.Permissions;
-using Plugin.Permissions.Abstractions;
-using cam = Plugin.Media.CrossMedia;
-using camOptions = Plugin.Media.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xamarin.Essentials;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-using BinManager.Settings;
-using BinManager.Utilities.Enums;
-
+﻿
 namespace BinManager.Views
 {
+    #region imports
+    using Plugin.Permissions;
+    using Plugin.Permissions.Abstractions;
+    using cam = Plugin.Media.CrossMedia;
+    using camOptions = Plugin.Media.Abstractions;
+    using System;
+    using Xamarin.Essentials;
+    using Xamarin.Forms;
+    using Xamarin.Forms.Xaml;
+    using BinManager.Settings;
+    using BinManager.Utilities.Enums;
+    #endregion
+
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MainMenu : ContentPage
     {
@@ -86,7 +85,7 @@ namespace BinManager.Views
             //Navigation.PushAsync(_mapPage);
             Navigation.PushAsync(new MapPage()
             {
-                Title = GlobalSettings.MapViewPageTitle
+                Title = "Map"
             });
         }
     }

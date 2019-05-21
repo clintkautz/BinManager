@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-
-
+﻿
 namespace BinManager.ViewModels
 {
+    #region imports
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Runtime.CompilerServices;
+    #endregion
+
     public class BaseViewModel : INotifyPropertyChanged
     {
         bool isBusy = false;

@@ -5,8 +5,8 @@
             x:Class="BinManager.Views.BinPage"
             Title="{Binding Title}">
     <TabbedPage.ToolbarItems>
-        <ToolbarItem x:Name="Save" Text="Save" Clicked="Save_Clicked">
-        </ToolbarItem>
+        <ToolbarItem x:Name="Cancel" Text="" Order="Primary"  Priority="0" Activated="Cancel_Clicked"></ToolbarItem>
+        <ToolbarItem x:Name="Save" Text="Save" Order="Primary"  Priority="1"  Activated="Save_Clicked"></ToolbarItem>        
     </TabbedPage.ToolbarItems>
   <!--Pages can be added as references or inline-->
     <ContentPage Title="General" >
@@ -17,7 +17,7 @@
                     <Frame Margin="0,20,0,0" x:Name="BinPicFrame" HorizontalOptions="Center" OutlineColor="Blue" Padding="2">
                         <Image x:Name="BinPic"/>
                     </Frame>
-
+                    <ActivityIndicator x:Name="activityIndicator_save" Color="Black"/>
                     <Label FontAttributes="Bold" Text="Employee #" x:Name="EmployeeLabel"/>
                     <Entry x:Name="EmployeeNumTxtBox" TextChanged="EmployeeNumTxtBox_Changed"/>
                     <!----> 
@@ -112,7 +112,7 @@
                 </StackLayout>
                 <ScrollView>
                     <StackLayout Margin="10,35,10,10" x:Name="CapcaityStack">
-                        
+                        <ActivityIndicator x:Name="activityIndicatorCapacity_save" Color="Black"/>
                         <StackLayout x:Name="FlatStack">
                             <!--Flat Bin-->
                             <Label Text="Crib Width:" x:Name="CribWidthLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
@@ -177,7 +177,7 @@
   <ContentPage Title="Contents">
         <ContentPage.Content>
             <StackLayout>
-                <!--<StackLayout Margin="10,35,10,10">
+                <StackLayout Margin="10,35,10,10">
                     <Label Text="" HorizontalOptions="CenterAndExpand" x:Name="ContentsLabel"/>
                     <Label Text="Total Grain Volume: " HorizontalOptions="CenterAndExpand" x:Name="VolumeLabel"/>
                 </StackLayout>
@@ -185,42 +185,42 @@
                     <StackLayout Margin="10,35,10,10" x:Name="ContentStack">
                         <Label Text="Crop Year:" x:Name="CropYearLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
                         <Picker x:Name="CropYear"
-                                SelectedIndex="{Binding CropYear}" 
+                                
                                 SelectedIndexChanged="OnDateSelectedAsync"
                                 iOSSpecific:Picker.UpdateMode="WhenFinished"/>
 
                         <Label Text="Crop:" x:Name="CropLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                        <Entry Placeholder="Crop" Text="{Binding Crop}" x:Name="Crop" />
+                        <Entry Placeholder="Crop" Text="" x:Name="Crop" />
 
                         <Label Text="Grain Height:" x:Name="GrainHeightLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                        <Entry Placeholder="Grain Height" Text="{Binding GrainHeight}" Keyboard="Numeric" x:Name="GrainHeight" TextChanged="GrainHeight_Changed"/>
+                        <Entry Placeholder="Grain Height" Text="" Keyboard="Numeric" x:Name="GrainHeight" />
 
                         <Label Text="Grain in Hopper Height:" x:Name="GrainHopperHeightLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                        <Entry Placeholder="Grain in Hopper Height" Text="{Binding GrainHopperHeight}" Keyboard="Numeric" x:Name="GrainHopperHeight" TextChanged="GrainHopperHeight_Changed"/>
+                        <Entry Placeholder="Grain in Hopper Height" Text="" Keyboard="Numeric" x:Name="GrainHopperHeight" />
 
                         <Label Text="Grain Cone Height:" x:Name="GrainConeHeightLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                        <Entry Placeholder="Grain Cone Height" Text="{Binding GrainConeHeight}" Keyboard="Numeric" x:Name="GrainConeHeight" TextChanged="GrainHeight_Changed"/>
+                        <Entry Placeholder="Grain Cone Height" Text="" Keyboard="Numeric" x:Name="GrainConeHeight" />
 
                         <Label Text="Moisture %:" x:Name="MositurePercentLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                        <Entry Placeholder="Moisture %" Text="{Binding MoisturePercent}" Keyboard="Numeric" x:Name="MoisturePercent" />
+                        <Entry Placeholder="Moisture %" Text="" Keyboard="Numeric" x:Name="MoisturePercent" />
 
                         <Label Text="Moisture Factor:" x:Name="MositureFactorLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                        <Entry Placeholder="Moisture Factor" Text="{Binding MoistureFactor}" Keyboard="Numeric" x:Name="MoistureFactor" />
+                        <Entry Placeholder="Moisture Factor" Text="" Keyboard="Numeric" x:Name="MoistureFactor" />
 
                         <Label Text="Test Weight:" x:Name="TestWeightLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                        <Entry Placeholder="Test Weight" Text="{Binding TestWeight}" Keyboard="Numeric" x:Name="TestWeight" />
+                        <Entry Placeholder="Test Weight" Text="" Keyboard="Numeric" x:Name="TestWeight" />
 
                         <Label Text="Pack Factor:" x:Name="PackFactorLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                        <Entry Placeholder="Pack Factor" Text="{Binding PackFactor}" Keyboard="Numeric" x:Name="PackFactor" />
+                        <Entry Placeholder="Pack Factor" Text="" Keyboard="Numeric" x:Name="PackFactor" />
 
                         <Label Text="Dockage %:" x:Name="DockagePercentLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                        <Entry Placeholder="Dockage %" Text="{Binding DockagePercent}" Keyboard="Numeric" x:Name="DockagePercent" />
+                        <Entry Placeholder="Dockage %" Text="" Keyboard="Numeric" x:Name="DockagePercent" />
 
                         <Label Text="Dockage Factor:" x:Name="DockageFactorLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                        <Entry Placeholder="Dockage Factor" Text="{Binding DockageFactor}" Keyboard="Numeric" x:Name="DockageFactor" />
+                        <Entry Placeholder="Dockage Factor" Text="" Keyboard="Numeric" x:Name="DockageFactor" />
 
                         <Label Text="Conversion Factor:" x:Name="ConversionFactorLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                        <Picker x:Name= "ConversionFactor" SelectedIndex="{Binding ConversionFactor}" iOSSpecific:Picker.UpdateMode="WhenFinished">
+                        <Picker x:Name= "ConversionFactor" iOSSpecific:Picker.UpdateMode="WhenFinished">
                             <Picker.ItemsSource>
                                 <x:Array Type="{x:Type x:String}">
                                     <x:String>.4 - Ears of Corn</x:String>
@@ -230,16 +230,16 @@
                         </Picker>
 
                         <Label Text="Shell Factor:" x:Name="ShellFactorLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                        <Entry Placeholder="Shell Factor" Text="{Binding ShellFactor}" Keyboard="Numeric" x:Name="ShellFactor" />
+                        <Entry Placeholder="Shell Factor" Text="" Keyboard="Numeric" x:Name="ShellFactor" />
 
                         <Label Text="Total Deduction Volume:" x:Name="TotalDeductionVolumeLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                        <Entry Placeholder="Total Deduction Volume" Text="{Binding TotalDeductionVolume}" Keyboard="Numeric" x:Name="TotalDeductionVolume" />
+                        <Entry Placeholder="Total Deduction Volume" Text="" Keyboard="Numeric" x:Name="TotalDeductionVolume" />
 
                         <Label Text="Notes:" x:Name="NotesLabel" FontAttributes="Bold" Margin="0,5,0,0"/>
-                        <Editor MaxLength="256" HeightRequest="100" Text="{Binding ContentsNotes}" Placeholder="Notes" x:Name="ContentsNotes" />-->
+                        <Editor MaxLength="256" HeightRequest="100" Text="" Placeholder="Notes" x:Name="ContentsNotes" />
                         
-                    <!--</StackLayout>
-                </ScrollView>-->
+                    </StackLayout>
+                </ScrollView>
             </StackLayout>
         </ContentPage.Content>
     </ContentPage>
