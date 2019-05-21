@@ -4,14 +4,21 @@ namespace BinManager.Utilities.Mappers
     #region imports
     using BinManager.Models;
     using BinManager.ViewModels;
+    using Plugin.Media.Abstractions;
     using System;
     #endregion
 
     public static class BinViewModelMapper
     {
         public static IBinstance MapToBin(this BinViewModel inViewModel)
-        {
+        {             
             IBinstance bin = new Binstance();
+
+            if (inViewModel.Binstance.Image != null)
+            {
+                bin.Image = inViewModel.Binstance.Image;
+            }
+
             if (inViewModel.New)
             {
                 bin.CreatedBy = inViewModel.EmpoyeeNumber;

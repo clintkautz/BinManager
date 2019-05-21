@@ -325,6 +325,7 @@ namespace BinManager
                 return ArcCrudEnum.Exception;
             }
         }
+
         #endregion
 
         #region Edit Bin

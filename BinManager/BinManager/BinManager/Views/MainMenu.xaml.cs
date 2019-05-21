@@ -12,6 +12,7 @@ namespace BinManager.Views
     using Xamarin.Forms.Xaml;
     using BinManager.Settings;
     using BinManager.Utilities.Enums;
+    using Plugin.Media;
     #endregion
 
     [XamlCompilation(XamlCompilationOptions.Compile)]
@@ -39,6 +40,7 @@ namespace BinManager.Views
                 
             }
         }
+
         public async void NewEntryBtn_Clicked(object sender, EventArgs args)
         {
             // Check camera permissions
@@ -55,9 +57,14 @@ namespace BinManager.Views
                 }
 
                 // Take photo, used in creating new entry. Metadata taken from here
-                var photo = await cam.Current.TakePhotoAsync(new camOptions.StoreCameraMediaOptions() { });
+                await cam.Current.Initialize();
+                var photo = await CrossMedia.Current.TakePhotoAsync(new camOptions.StoreCameraMediaOptions
+                {
+                    SaveToAlbum = true,
+                    Name = "binPic.png"
+                });
 
-                await Navigation.PushAsync(new BinPage());
+                //var photo = await cam.Current.TakePhotoAsync(new camOptions.StoreCameraMediaOptions() { });
 
                 if (photo != null)
                 {
