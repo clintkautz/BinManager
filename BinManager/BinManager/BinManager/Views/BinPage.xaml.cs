@@ -1,26 +1,21 @@
-﻿using BinManager.Models;
-using BinManager.Utilities.Enums;
-using BinManager.Utilities.Extensions;
-using BinManager.ViewModels;
-using Esri.ArcGISRuntime.Data;
-using Newtonsoft.Json;
-using Plugin.Permissions;
-using Plugin.Permissions.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-using Plugin.Media.Abstractions;
-using BinManager.Utilities.Mappers;
-
+﻿
 namespace BinManager.Views
 {
     #region imports
+    using BinManager.Utilities.Enums;
+    using BinManager.Utilities.Extensions;
+    using BinManager.ViewModels;
+    using Esri.ArcGISRuntime.Data;
+    using Plugin.Permissions;
+    using Plugin.Permissions.Abstractions;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Threading.Tasks;
+    using Xamarin.Forms;
+    using Xamarin.Forms.Xaml;
+    using Plugin.Media.Abstractions;
+    using BinManager.Utilities.Mappers;
     #endregion
 
     [XamlCompilation(XamlCompilationOptions.Compile)]
@@ -59,10 +54,11 @@ namespace BinManager.Views
 
             HasHopperHopperDisable();
             HideCapacityFields();
+            HideContentsFields();
 
             //CropYear.ItemsSource = viewModel.DateRange;
             //SetCropYear();
-            //HideContentsFields();
+
 
         }
         //Add New Bin (photo)
@@ -91,10 +87,10 @@ namespace BinManager.Views
 
             HasHopperHopperDisable();
             HideCapacityFields();
+            HideContentsFields();
 
             //CropYear.ItemsSource = viewModel.DateRange;
             //SetCropYear();
-            //HideContentsFields();
 
         }
 
@@ -481,10 +477,11 @@ namespace BinManager.Views
             {//cancel edit
                 Cancel.Text = "Delete";
                 Save.Text = "Edit";
+                RemoveErrors();
                 viewModel.Edit = false;
                 viewModel.Binstance = viewModel.ArcGISFeature.MapToBin();
-                //viewModel.FeatureMapBinType();
-                //viewModel.ViewModelMapBinType();
+                viewModel.FeatureMapBinType();
+                viewModel.MapBinstanceToViewModel();
             }
             else if (!viewModel.New)
             {//delete
@@ -549,87 +546,87 @@ namespace BinManager.Views
         #region SetContents Page
         private void SetContentsPage()
         {
-            //ContentsLabel.TextColor = Color.Black;
+            ContentsLabel.TextColor = Color.Black;
 
-            //VolumeLabel.IsEnabled = true;
-            //VolumeLabel.IsVisible = true;
+            VolumeLabel.IsEnabled = true;
+            VolumeLabel.IsVisible = true;
 
-            //ContentStack.IsVisible = true;
-            //ContentStack.IsEnabled = true;
+            ContentStack.IsVisible = true;
+            ContentStack.IsEnabled = true;
 
-            //switch (viewModel.BinType)
-            //{
-            //    case -1:
-            //        HideContentsFields();
-            //        break;
-            //    case 0:
-            //        SetFlatContents();
-            //        break;                
-            //    case 1:
-            //        SetGravityContents();
-            //        break;
-            //    case 2:
-            //        SetPolygonContents();
-            //        break;
-            //    case 3:
-            //        SetRoundContents();
-            //        break;
-            //    default:
-            //        HideContentsFields();
-            //        break;
-            //}
+            switch (viewModel.BinType)
+            {
+                case -1:
+                    HideContentsFields();
+                    break;
+                case 0:
+                    SetFlatContents();
+                    break;
+                case 1:
+                    SetGravityContents();
+                    break;
+                case 2:
+                    SetPolygonContents();
+                    break;
+                case 3:
+                    SetRoundContents();
+                    break;
+                default:
+                    HideContentsFields();
+                    break;
+            }
 
             //SetCropYear();
         }
 
-        //private void SetPolygonContents()
-        //{
-        //    ContentsLabel.Text = "Enter Polygon Bin Contents";
-        //    GrainHopperHeightLabel.IsVisible = false;
-        //    GrainHopperHeightLabel.IsEnabled = false;
-        //    GrainHopperHeight.IsVisible = false;
-        //    GrainHopperHeight.IsEnabled = false;
-        //}
+        private void SetPolygonContents()
+        {
+            ContentsLabel.Text = "Enter Polygon Bin Contents";
+            GrainHopperHeightLabel.IsVisible = false;
+            GrainHopperHeightLabel.IsEnabled = false;
+            GrainHopperHeight.IsVisible = false;
+            GrainHopperHeight.IsEnabled = false;
+        }
 
-        //private void SetGravityContents()
-        //{
-        //    ContentsLabel.Text = "Enter Gravity Bin Contents";
-        //    GrainHopperHeightLabel.IsVisible = true;
-        //    GrainHopperHeightLabel.IsEnabled = true;
-        //    GrainHopperHeight.IsVisible = true;
-        //    GrainHopperHeight.IsEnabled = true;
-        //}
+        private void SetGravityContents()
+        {
+            ContentsLabel.Text = "Enter Gravity Bin Contents";
+            GrainHopperHeightLabel.IsVisible = true;
+            GrainHopperHeightLabel.IsEnabled = true;
+            GrainHopperHeight.IsVisible = true;
+            GrainHopperHeight.IsEnabled = true;
+        }
 
-        //private void SetRoundContents()
-        //{
-        //    ContentsLabel.Text = "Enter Round Bin Contents";
-        //    GrainHopperHeightLabel.IsVisible = true;
-        //    GrainHopperHeightLabel.IsEnabled = true;
-        //    GrainHopperHeight.IsVisible = true;
-        //    GrainHopperHeight.IsEnabled = true;
-        //}
+        private void SetRoundContents()
+        {
+            ContentsLabel.Text = "Enter Round Bin Contents";
+            GrainHopperHeightLabel.IsVisible = true;
+            GrainHopperHeightLabel.IsEnabled = true;
+            GrainHopperHeight.IsVisible = true;
+            GrainHopperHeight.IsEnabled = true;
+        }
 
-        //private void SetFlatContents()
-        //{
-        //    ContentsLabel.Text = "Enter Flat Bin Contents";
-        //    GrainHopperHeightLabel.IsVisible = false;
-        //    GrainHopperHeightLabel.IsEnabled = false;
-        //    GrainHopperHeight.IsVisible = false;
-        //    GrainHopperHeight.IsEnabled = false;
-        //}
+        private void SetFlatContents()
+        {
+            ContentsLabel.Text = "Enter Flat Bin Contents";
+            GrainHopperHeightLabel.IsVisible = false;
+            GrainHopperHeightLabel.IsEnabled = false;
+            GrainHopperHeight.IsVisible = false;
+            GrainHopperHeight.IsEnabled = false;
+        }
 
-        //private void HideContentsFields()
-        //{
-        //    ContentsLabel.Text = "Bin Type is required";
-        //    ContentsLabel.TextColor = Color.Red;
+        private void HideContentsFields()
+        {
+            ContentsLabel.Text = "Bin Type is required";
+            ContentsLabel.TextColor = Color.Red;
 
-        //    VolumeLabel.IsEnabled = false;
-        //    VolumeLabel.IsVisible = false;
+            VolumeLabel.IsEnabled = false;
+            VolumeLabel.IsVisible = false;
 
-        //    ContentStack.IsVisible = false;
-        //    ContentStack.IsEnabled = false;
+            ContentStack.IsVisible = false;
+            ContentStack.IsEnabled = false;
 
-        //}
+        }
 
 
         #endregion
@@ -800,7 +797,7 @@ namespace BinManager.Views
             }
                         
             SetCapcityPage();
-            //SetContentsPage();
+            SetContentsPage();
 
         }
 

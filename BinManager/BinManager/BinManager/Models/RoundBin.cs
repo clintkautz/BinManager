@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BinManager.Models
+﻿namespace BinManager.Models
 {
     public class RoundBin : Binstance
     {

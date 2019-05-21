@@ -1,16 +1,18 @@
-﻿using BinManager.Models;
-using BinManager.Utilities.Enums;
-using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Text;
-using Esri.ArcGISRuntime.Data;
-using BinManager.Utilities.Mappers;
-using System.IO;
-using Newtonsoft.Json;
-
+﻿
 namespace BinManager.ViewModels
-{   
+{
+    #region imports
+    using BinManager.Models;
+    using BinManager.Utilities.Enums;
+    using System;
+    using System.Threading.Tasks;
+    using System.Collections.Generic;
+    using Esri.ArcGISRuntime.Data;
+    using BinManager.Utilities.Mappers;
+    using System.IO;
+    using Newtonsoft.Json;
+    #endregion
+
     public class BinViewModel : BaseViewModel
     {
         #region Constants
@@ -696,13 +698,13 @@ namespace BinManager.ViewModels
                         valid = ValidateFlatBin(valid);
                         break;
                     case BinTypeEnum.GravityWagon:
-                        ValidateGravityBin(valid);
+                        valid = ValidateGravityBin(valid);
                         break;
                     case BinTypeEnum.PolygonStructure:
-                        ValidatePolygonBin(valid);
+                        valid = ValidatePolygonBin(valid);
                         break;
                     case BinTypeEnum.RoundStorage:
-                        ValidateRoundBin(valid);
+                        valid = ValidateRoundBin(valid);
                         break;
                 }
             }
@@ -719,36 +721,36 @@ namespace BinManager.ViewModels
         private bool ValidateGravityBin(bool valid)
         {
             bool result = valid;
-            var bin = new GravityBin(Binstance);
+            var bin = (GravityBin)Binstance;
 
             if (bin.ChuteLength == 0)
             {
                 Errors.Add(3, "Chute Length is required");
-                valid = false;
+                result = false;
             }
 
             if (bin.HopperHeight == 0)
             {
                 Errors.Add(4, "Hopper Heigth is required");
-                valid = false;
+                result = false;
             }
 
             if (bin.RectangleHeight == 0)
             {
                 Errors.Add(5, "Rectangle Heigth is required");
-                valid = false;
+                result = false;
             }
 
             if (bin.RectangleLength == 0)
             {
                 Errors.Add(6, "Rectangle Length is required");
-                valid = false;
+                result = false;
             }
 
             if (bin.RectangleWidth == 0)
             {
                 Errors.Add(7, "Rectangle Width is required");
-                valid = false;
+                result = false;
             }
 
             result = ValidateContents(result);
@@ -758,24 +760,24 @@ namespace BinManager.ViewModels
         private bool ValidatePolygonBin(bool valid)
         {
             bool result = valid;
-            var bin = new PolygonBin(Binstance);
+            var bin = (PolygonBin)Binstance;
 
             if (bin.SideHeight == 0)
             {
                 Errors.Add(8, "Side Height is required");
-                valid = false;
+                result = false;
             }
 
             if (bin.SideWidth == 0)
             {
                 Errors.Add(9, "Side Width is required");
-                valid = false;
+                result = false;
             }
 
             if (bin.NumberOfSides == 0)
             {
                 Errors.Add(10, "Number Of Sides is required");
-                valid = false;
+                result = false;
             }
 
             ValidateContents(result);
@@ -785,24 +787,24 @@ namespace BinManager.ViewModels
         private bool ValidateRoundBin(bool valid)
         {
             bool result = valid;
-            var bin = new RoundBin(Binstance);
+            var bin = (RoundBin)Binstance;
 
             if (bin.Radius == 0)
             {
                 Errors.Add(11, "Radius is required");
-                valid = false;
+                result = false;
             }
 
             if (bin.RoofHeight == 0)
             {
                 Errors.Add(12, "Roof Height is required");
-                valid = false;
+                result = false;
             }
 
             if (bin.WallHeight == 0)
             {
                 Errors.Add(13, "Wall Height is required");
-                valid = false;
+                result = false;
             }
             //if (bin.HasHopper.Value? true : false)
             if (bin.HasHopper != null)
@@ -810,13 +812,13 @@ namespace BinManager.ViewModels
                 if (bin.HasHopper.Value == true && bin.HopperHeight == 0)
                 {
                     Errors.Add(14, "Hopper Height is required");
-                    valid = false;
+                    result = false;
                 }
 
                 if (bin.HasHopper.Value == true && bin.YTYData.GrainHopperHeight == 0)
                 {
                     Errors.Add(21, "Grain Hopper Height is required");
-                    valid = false;
+                    result = false;
                 }
             }
 
@@ -827,18 +829,18 @@ namespace BinManager.ViewModels
         private bool ValidateFlatBin(bool valid)
         {
             bool result = valid;
-            var bin = new FlatBin(Binstance);
+            var bin = (FlatBin)Binstance;
 
             if (bin.CribLength == 0)
             {
                 Errors.Add(15, "Crib Length is required");
-                valid = false;
+                result = false;
             }
 
             if (bin.CribWidth == 0)
             {
                 Errors.Add(16, "Crib Width is required");
-                valid = false;
+                result = false;
             }
 
             result = ValidateContents(result);
